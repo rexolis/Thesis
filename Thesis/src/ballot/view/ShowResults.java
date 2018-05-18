@@ -12,7 +12,7 @@ import org.opencv.highgui.HighGui;
 import org.opencv.highgui.ImageWindow;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import ballot.preprocess.ImageProcess;
+import ballot.process.ImageProcess;
 import ballot.view.MainFrame;
 
 public class ShowResults extends ImageProcess{

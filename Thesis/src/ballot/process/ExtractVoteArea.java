@@ -1,4 +1,4 @@
-package ballot.preprocess;
+package ballot.process;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

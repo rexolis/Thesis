@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ballot.preprocess.ExtractRectangles;
-import ballot.preprocess.ImageLoad;
+import ballot.process.ExtractRectangles;
+import ballot.process.ImageLoad;
 import net.miginfocom.swing.MigLayout;
 
 public class MainFrame extends JPanel implements ActionListener{
@@ -60,6 +60,11 @@ public class MainFrame extends JPanel implements ActionListener{
 		
 		
 		sidePanel.add(btnSelectBallot, "wrap");
+		sidePanel.add(btnGetVoteArea, "wrap");
+		sidePanel.add(btnGetNames, "wrap");
+		
+		btnGetVoteArea.setEnabled(false);
+		btnGetNames.setEnabled(false);
 		
 		
 		lbl1 = new JLabel();
@@ -96,7 +101,8 @@ public class MainFrame extends JPanel implements ActionListener{
                 
                 il = new ImageLoad(file.getName(), this);
 
-        		sidePanel.add(btnGetVoteArea, "wrap");
+        		//sidePanel.add(btnGetVoteArea, "wrap");
+                btnGetVoteArea.setEnabled(true);
         		
         		// TODO needs to be furnished. button sizes should be uniform
         		mainPanel.validate();
@@ -109,7 +115,8 @@ public class MainFrame extends JPanel implements ActionListener{
 		else if (e.getSource() == btnGetVoteArea) {
 
 			il.setContoursCropped();
-    		sidePanel.add(btnGetNames, "wrap");
+    		//sidePanel.add(btnGetNames, "wrap");
+			btnGetNames.setEnabled(true);
 		}
 		
 		
@@ -120,6 +127,7 @@ public class MainFrame extends JPanel implements ActionListener{
 				//System.out.println("GOOOOO");
 				er = new ExtractRectangles(il.getCroppedImage());
 				er.getNamesRect(il.getCroppedImage(), il.contours);
+				er.extractText();
 				
 			}
 

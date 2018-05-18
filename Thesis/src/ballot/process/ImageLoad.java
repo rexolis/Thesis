@@ -1,4 +1,4 @@
-package ballot.preprocess;
+package ballot.process;
 
 import java.util.List;
 import java.io.File;

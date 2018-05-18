@@ -1,4 +1,4 @@
-package ballot.preprocess;
+package ballot.process;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import ballot.view.ShowResults;
 public class ExtractRectangles extends ImageProcess {
 	
 	public Mat src, rectangleName;
-	public List<MatOfPoint> contours;
 	
 
 	public ExtractRectangles(Mat src) {
@@ -23,14 +22,13 @@ public class ExtractRectangles extends ImageProcess {
 	
 	public void getNamesRect(Mat src, List<MatOfPoint> contours) {
 		
-		//contours = findContours(src);
 		for(int i = 0, j = 1; i < contours.size(); i++){
 			if (Imgproc.contourArea(contours.get(i)) > 4000 ){
 
 				Rect rect = Imgproc.boundingRect(contours.get(i));
 				
 				if (rect.height > 28){
-					System.out.println(i+ ". Current rect: " + rect);
+					//System.out.println(i+ ". Current rect: " + rect);
 					rectangleName = cropImage(src, rect);
 					saveImgRect("temp/name" + j++ + ".png" );
 					
@@ -46,9 +44,9 @@ public class ExtractRectangles extends ImageProcess {
 		new ShowResults().saveImage(rectangleName, filename);
 	}
 	
-	public void setContours(List<MatOfPoint> contours) {
+	public void extractText() {
 		
-		this.contours = contours;
+		new OCR().fileTraverse();
 	}
 
 }

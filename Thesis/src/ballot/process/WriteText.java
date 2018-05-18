@@ -1,4 +1,4 @@
-package ballot.preprocess;
+package ballot.process;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
