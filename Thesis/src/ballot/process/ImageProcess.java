@@ -10,6 +10,7 @@ import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 /**
  * 
@@ -138,6 +139,19 @@ public abstract class ImageProcess {
 	    }
 
 	    return new Dimension(new_width, new_height);
+	}
+	
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the blurred image
+	 */
+	public Mat gaussianBlur(Mat img) {
+		
+		Mat gaussianBlur = new Mat();
+		Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
+		
+		return gaussianBlur;
 	}
 
 }

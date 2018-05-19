@@ -126,7 +126,7 @@ public class MainFrame extends JPanel implements ActionListener{
 			if (er == null) {
 				//System.out.println("GOOOOO");
 				er = new ExtractRectangles(il.getCroppedImage());
-				er.getNamesRect(il.getCroppedImage(), il.contours);
+				er.getNamesRect(il.contours);
 				er.extractText();
 				
 			}

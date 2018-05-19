@@ -17,17 +17,19 @@ public class ExtractRectangles extends ImageProcess {
 
 	public ExtractRectangles(Mat src) {
 		
-		this.src = src;
+		this.src = threshold(src);
+		
 	}
 	
-	public void getNamesRect(Mat src, List<MatOfPoint> contours) {
+	public void getNamesRect(List<MatOfPoint> contours) {
 		
 		for(int i = 0, j = 1; i < contours.size(); i++){
 			if (Imgproc.contourArea(contours.get(i)) > 4000 ){
 
 				Rect rect = Imgproc.boundingRect(contours.get(i));
 				
-				if (rect.height > 28){
+				//prevents the largest contour to be included which is the whole picture
+				if (rect.height > 28 && rect.x != 0 && rect.y != 0){
 					//System.out.println(i+ ". Current rect: " + rect);
 					rectangleName = cropImage(src, rect);
 					saveImgRect("temp/name" + j++ + ".png" );

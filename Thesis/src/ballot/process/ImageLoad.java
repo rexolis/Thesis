@@ -11,7 +11,7 @@ import ballot.view.MainFrame;
 
 public class ImageLoad{
 	
-	private Mat src, cropped;
+	private Mat src, cropped, srcColored;
 	private ExtractVoteArea extract;
 	public List<MatOfPoint> contours;
 	
@@ -19,8 +19,12 @@ public class ImageLoad{
 		
 		String filename = "images/" + args;
         // Load an image in a grayscale format
-        Mat src = Imgcodecs.imread(filename, Imgcodecs.IMREAD_GRAYSCALE);
-        this.src= src;
+        src = Imgcodecs.imread(filename, Imgcodecs.IMREAD_GRAYSCALE);
+        
+        //Load a colored version of image
+        srcColored = Imgcodecs.imread(filename, Imgcodecs.IMREAD_COLOR);
+        System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
+        
         // Check if image is loaded fine
         if( src.empty() ) {
             System.out.println("Error opening image!");
