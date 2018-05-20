@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import ballot.process.ExtractRectangles;
 import ballot.process.ImageLoad;
@@ -26,6 +27,7 @@ public class MainFrame extends JPanel implements ActionListener{
 	JPanel sidePanel = new JPanel();
 	JPanel showPanel = new JPanel();
     JFileChooser fc;
+    JScrollPane sp;
 
 	JButton btnSelectBallot = new JButton("Select Ballot");
 	JButton btnGetVoteArea = new JButton("Extract Vote Area");
@@ -49,8 +51,6 @@ public class MainFrame extends JPanel implements ActionListener{
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
 		showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
 		
-		//JScrollPane showScrollPane = new JScrollPane();
-		
 		sidePanel.setBorder(
                 BorderFactory.createTitledBorder("Options")
         );
@@ -71,10 +71,11 @@ public class MainFrame extends JPanel implements ActionListener{
         lbl1.setBorder(
             BorderFactory.createEtchedBorder()
         );
-        
-        showPanel.add(lbl1, "w 600, h 670");
-        //showPanel.add(showScrollPane);
-		
+
+        sp = new JScrollPane(lbl1);
+        showPanel.add(sp, "w 1000, h 670");
+
+        mainPanel.revalidate();
 
 		mainPanel.add(sidePanel, "dock west");
 		mainPanel.add(showPanel);

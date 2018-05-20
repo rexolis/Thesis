@@ -132,9 +132,8 @@ public abstract class ImageProcess {
 
 	    // then check if we need to scale even with the new height
 	    if (new_height > bound_height) {
-	        //scale height to fit instead
+	        //scale height and width to maintain aspect ratio
 	        new_height = bound_height;
-	        //scale width to maintain aspect ratio
 	        new_width = (new_height * original_width) / original_height;
 	    }
 

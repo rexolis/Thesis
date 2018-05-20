@@ -17,7 +17,7 @@ public class ExtractRectangles extends ImageProcess {
 
 	public ExtractRectangles(Mat src) {
 		
-		this.src = threshold(src);
+		this.src = gaussianBlur(src);
 		
 	}
 	

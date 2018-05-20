@@ -37,7 +37,7 @@ public class ShowResults extends ImageProcess{
 	public void showImage(BufferedImage img, MainFrame frame, File filename) {
 
 		Dimension imgSize = new Dimension(img.getWidth(), img.getHeight());
-		Dimension boundary = new Dimension(600, 670);
+		Dimension boundary = new Dimension(950, 2300);
 		
 		Dimension newImgSize = getScaledDimension(imgSize, boundary);
 		
