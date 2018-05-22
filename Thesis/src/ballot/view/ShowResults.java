@@ -13,7 +13,7 @@ import org.opencv.highgui.ImageWindow;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import ballot.process.ImageProcess;
-import ballot.view.MainFrame;
+import ballot.view.MainPanel;
 
 public class ShowResults extends ImageProcess{
 	
@@ -34,7 +34,7 @@ public class ShowResults extends ImageProcess{
         
 	}
 	
-	public void showImage(BufferedImage img, MainFrame frame, File filename) {
+	public void showImage(BufferedImage img, MainPanel frame, File filename) {
 
 		Dimension imgSize = new Dimension(img.getWidth(), img.getHeight());
 		Dimension boundary = new Dimension(950, 2300);
@@ -45,19 +45,8 @@ public class ShowResults extends ImageProcess{
 		
 		Image scaledImg = img.getScaledInstance((int)newImgSize.getWidth(), (int)newImgSize.getHeight(),
 		        Image.SCALE_DEFAULT);
-		frame.lbl1.setIcon(new ImageIcon(scaledImg));
-		
-		
-		
-		/*Desktop d = Desktop.getDesktop();
-		
-		try {
-			d.open(filename);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-	
+		frame.showPanel.lbl1.setIcon(new ImageIcon(scaledImg));
+
 	
 	}
 	

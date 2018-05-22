@@ -31,19 +31,13 @@ public class OCR {
     public void fileTraverse() {
 
         String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\temp";
-
         File file = new File(dirName);
-        
         List<File> myfiles = doListing(file);
-        
-        //myfiles.forEach(System.out::println);
         
         for(int i=0; i<myfiles.size(); i++) {
         	
         	writeToTxt(myfiles.get(i));
-        	
         }
-        
     }
 
     //traverse each files in the directory and add it to the List

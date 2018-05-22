@@ -1,7 +1,8 @@
 package ballot.view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.*;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -12,20 +13,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+
 import ballot.process.ExtractRectangles;
 import ballot.process.ImageLoad;
 import net.miginfocom.swing.MigLayout;
 
-public class MainFrame extends JPanel implements ActionListener{
+public class MainPanel extends JPanel implements ActionListener{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	JFrame frame = new JFrame("Ballot Template Generator");
-	JPanel mainPanel = new JPanel();
+	//JPanel mainPanel = new JPanel();
 	JPanel sidePanel = new JPanel();
-	JPanel showPanel = new JPanel();
+	ShowPanel showPanel = new ShowPanel(this);
     JFileChooser fc;
     JScrollPane sp;
 
@@ -34,28 +36,25 @@ public class MainFrame extends JPanel implements ActionListener{
 	JButton btnBallotTemplate = new JButton("Generate Ballot Template");
 	JButton btnGetNames = new JButton("Extract Names");
 	
-	public JLabel lbl1;
 	private ImageLoad il;
 	private ExtractRectangles er;
 	
 	
 	
-	public MainFrame() {
+	public MainPanel() {
 		
         //Create a file chooser
         fc = new JFileChooser();
         
         //new ExtractVoteArea(this);
+        //DrawRect drawRect = new DrawRect();
         
-		mainPanel.setLayout(new MigLayout());
+		this.setLayout(new MigLayout());
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
-		showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
+		//showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
 		
 		sidePanel.setBorder(
                 BorderFactory.createTitledBorder("Options")
-        );
-		showPanel.setBorder(
-                BorderFactory.createTitledBorder("Output")
         );
 		
 		
@@ -67,36 +66,32 @@ public class MainFrame extends JPanel implements ActionListener{
 		btnGetNames.setEnabled(false);
 		
 		
-		lbl1 = new JLabel();
-        lbl1.setBorder(
-            BorderFactory.createEtchedBorder()
-        );
+        
+        //lbl1.addMouseListener(drawRect.);
 
-        sp = new JScrollPane(lbl1);
-        showPanel.add(sp, "w 1000, h 670");
+        this.revalidate();
 
-        mainPanel.revalidate();
-
-		mainPanel.add(sidePanel, "dock west");
-		mainPanel.add(showPanel);
-		
+		this.add(sidePanel, "dock west");
+		this.add(showPanel);
 
 		btnSelectBallot.addActionListener(this);
 		btnGetVoteArea.addActionListener(this);
 		btnGetNames.addActionListener(this);
 		
-		frame.add(mainPanel);
+		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setContentPane(this);
 		frame.pack();
 		frame.setVisible(true);
+		repaint();
+		
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnSelectBallot) {
 			
-			int returnVal = fc.showOpenDialog(MainFrame.this);
+			int returnVal = fc.showOpenDialog(MainPanel.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 
@@ -106,8 +101,8 @@ public class MainFrame extends JPanel implements ActionListener{
                 btnGetVoteArea.setEnabled(true);
         		
         		// TODO needs to be furnished. button sizes should be uniform
-        		mainPanel.validate();
-        		mainPanel.repaint();
+        		this.validate();
+        		this.repaint();
             }
 			
 		}
@@ -124,15 +119,16 @@ public class MainFrame extends JPanel implements ActionListener{
 		//this can only be accessed if there is a ballot is already cropped
 		else if (e.getSource() == btnGetNames) {
 			
-			if (er == null) {
+			//if (er == null) {
 				//System.out.println("GOOOOO");
 				er = new ExtractRectangles(il.getCroppedImage());
 				er.getNamesRect(il.contours);
 				er.extractText();
 				
-			}
+			//}
 
 		}
 	}
+	
 
 }

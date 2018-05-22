@@ -12,7 +12,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import ballot.view.MainFrame;
+import ballot.view.MainPanel;
 import ballot.view.ShowResults;
 
 public class ExtractVoteArea extends ImageProcess {
@@ -23,7 +23,7 @@ public class ExtractVoteArea extends ImageProcess {
 	
 	//private ImageProcess ip;
 	private ImageLoad imageLoad;
-	private MainFrame frame;
+	private MainPanel frame;
 	private ShowResults showResults;
 	
 	//variables to hold the details of the second largest contour denoting the voting area
@@ -33,7 +33,7 @@ public class ExtractVoteArea extends ImageProcess {
     
     private BufferedImage img;
 
-	public ExtractVoteArea(Mat src, boolean newFile, ImageLoad imageLoad, MainFrame frame, File filename) {
+	public ExtractVoteArea(Mat src, boolean newFile, ImageLoad imageLoad, MainPanel frame, File filename) {
 		
 		this.imageLoad = imageLoad;
 		this.frame = frame;

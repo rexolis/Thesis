@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 
 import org.opencv.core.Core;
 
-import ballot.view.MainFrame;
+import ballot.view.MainPanel;
 
 public class Main{
 	
@@ -15,7 +15,7 @@ public class Main{
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new MainFrame();
+				new MainPanel();
 			}
 		});
     }

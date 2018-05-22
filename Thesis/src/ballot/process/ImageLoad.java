@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import ballot.view.MainFrame;
+import ballot.view.MainPanel;
 
 public class ImageLoad{
 	
@@ -15,7 +15,7 @@ public class ImageLoad{
 	private ExtractVoteArea extract;
 	public List<MatOfPoint> contours;
 	
-	public ImageLoad(String args, MainFrame frame) {
+	public ImageLoad(String args, MainPanel frame) {
 		
 		String filename = "images/" + args;
         // Load an image in a grayscale format
