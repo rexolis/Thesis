@@ -45,7 +45,7 @@ public class ShowResults extends ImageProcess{
 		
 		Image scaledImg = img.getScaledInstance((int)newImgSize.getWidth(), (int)newImgSize.getHeight(),
 		        Image.SCALE_DEFAULT);
-		frame.showPanel.lbl1.setIcon(new ImageIcon(scaledImg));
+		frame.showLabel.getJLabel().setIcon(new ImageIcon(scaledImg));
 
 	
 	}

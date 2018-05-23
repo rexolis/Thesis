@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ShowPanel extends JPanel{
+public class ShowLabel extends JPanel{
 	
 	/**
 	 * 
@@ -23,18 +23,16 @@ public class ShowPanel extends JPanel{
 	
 	public JLabel lbl1;
 	
-	public ShowPanel(MainPanel mainPanel) {
+	public ShowLabel(JPanel showPanel) {
 		
-		setLayout(new MigLayout("wrap 3", "[]10[]"));
-		setBorder(
-                BorderFactory.createTitledBorder("Output")
-        );
-		
+		setLayout(new MigLayout());
 		lbl1 = new JLabel();
-        lbl1.setBorder(
+        /*lbl1.setBorder(
             BorderFactory.createEtchedBorder()
-        );
-
+        );*/
+        
+        this.add(lbl1);
+        
         sp = new JScrollPane(lbl1);
         add(sp, "w 1000, h 670");
 
@@ -44,6 +42,11 @@ public class ShowPanel extends JPanel{
       	lbl1.addMouseListener(listener);
       	lbl1.addMouseMotionListener(listener);
 		
+	}
+	
+	public JLabel getJLabel() {
+		
+		return lbl1;
 	}
 
 
@@ -62,12 +65,12 @@ public class ShowPanel extends JPanel{
     }
 
     public void drawPerfectRect(Graphics g, int x, int y, int x2, int y2) {
-        int px = Math.min(x,x2);
-        int py = Math.min(y,y2);
-        int pw=Math.abs(x-x2);
-        int ph=Math.abs(y-y2);
-        //System.out.println("Rectangle is drawing");
+        int px = Math.min(x,x2) + 8;
+        int py = Math.min(y,y2) + 8;
+        int pw = Math.abs(x-x2);
+        int ph = Math.abs(y-y2);
         g.drawRect(px, py, pw, ph);
+        System.out.println("Rectangle: " + Math.min(x,x2) + ", " + Math.min(y,y2) + ", " + pw + ", " + ph);
     }
 
 	//@Override

@@ -27,9 +27,10 @@ public class MainPanel extends JPanel implements ActionListener{
 	JFrame frame = new JFrame("Ballot Template Generator");
 	//JPanel mainPanel = new JPanel();
 	JPanel sidePanel = new JPanel();
-	ShowPanel showPanel = new ShowPanel(this);
+	JPanel showPanel = new JPanel();
     JFileChooser fc;
     JScrollPane sp;
+    //JLabel lbl1;
 
 	JButton btnSelectBallot = new JButton("Select Ballot");
 	JButton btnGetVoteArea = new JButton("Extract Vote Area");
@@ -38,6 +39,7 @@ public class MainPanel extends JPanel implements ActionListener{
 	
 	private ImageLoad il;
 	private ExtractRectangles er;
+	public ShowLabel showLabel = new ShowLabel(showPanel);
 	
 	
 	
@@ -48,26 +50,35 @@ public class MainPanel extends JPanel implements ActionListener{
         
         //new ExtractVoteArea(this);
         //DrawRect drawRect = new DrawRect();
+        //showLabel = new ShowLabel();
         
 		this.setLayout(new MigLayout());
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
-		//showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
+		showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
 		
 		sidePanel.setBorder(
                 BorderFactory.createTitledBorder("Options")
         );
+		showPanel.setBorder(
+                BorderFactory.createTitledBorder("Output")
+        );
+
+		showPanel.add(showLabel, "w 1000, h 670");
 		
+		/*lbl1 = new JLabel();
+		lbl1.setBorder(
+             BorderFactory.createEtchedBorder()
+		);*/
+        //sp = new JScrollPane(showLabel.lbl1);
+        //showPanel.add(sp, "w 1000, h 670");
 		
+        
 		sidePanel.add(btnSelectBallot, "wrap");
 		sidePanel.add(btnGetVoteArea, "wrap");
 		sidePanel.add(btnGetNames, "wrap");
 		
 		btnGetVoteArea.setEnabled(false);
 		btnGetNames.setEnabled(false);
-		
-		
-        
-        //lbl1.addMouseListener(drawRect.);
 
         this.revalidate();
 
