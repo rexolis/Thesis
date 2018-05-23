@@ -41,11 +41,13 @@ public class ShowResults extends ImageProcess{
 		
 		Dimension newImgSize = getScaledDimension(imgSize, boundary);
 		
-		//System.out.println("Scaled image: " + newImgSize);
+		System.out.println("Original image: " + imgSize);
+		System.out.println("Scaled image: " + newImgSize);
 		
 		Image scaledImg = img.getScaledInstance((int)newImgSize.getWidth(), (int)newImgSize.getHeight(),
 		        Image.SCALE_DEFAULT);
 		frame.showLabel.getJLabel().setIcon(new ImageIcon(scaledImg));
+		//frame.showLabel.getJLabel().setIcon(new ImageIcon(img));
 
 	
 	}

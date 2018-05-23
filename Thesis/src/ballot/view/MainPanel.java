@@ -47,6 +47,9 @@ public class MainPanel extends JPanel implements ActionListener{
 		
         //Create a file chooser
         fc = new JFileChooser();
+        ImagePreviewPanel preview = new ImagePreviewPanel();
+        fc.setAccessory(preview);
+        fc.addPropertyChangeListener(preview);
         
         //new ExtractVoteArea(this);
         //DrawRect drawRect = new DrawRect();

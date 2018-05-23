@@ -26,6 +26,7 @@ public class ShowLabel extends JPanel{
 	public ShowLabel(JPanel showPanel) {
 		
 		setLayout(new MigLayout());
+		//setFocusable(true);
 		lbl1 = new JLabel();
         /*lbl1.setBorder(
             BorderFactory.createEtchedBorder()
