@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
+import javax.swing.JTextField;
 
 import ballot.process.ExtractRectangles;
 import ballot.process.ImageLoad;
@@ -28,6 +28,7 @@ public class MainPanel extends JPanel implements ActionListener{
 	//JPanel mainPanel = new JPanel();
 	JPanel sidePanel = new JPanel();
 	JPanel showPanel = new JPanel();
+	JPanel categorize = new JPanel();
     JFileChooser fc;
     JScrollPane sp;
     //JLabel lbl1;
@@ -36,6 +37,10 @@ public class MainPanel extends JPanel implements ActionListener{
 	JButton btnGetVoteArea = new JButton("Extract Vote Area");
 	JButton btnBallotTemplate = new JButton("Generate Ballot Template");
 	JButton btnGetNames = new JButton("Extract Names");
+	JButton btnCategorizeNames = new JButton("Categorize Names");
+
+	JTextField position = new JTextField(30);
+	JTextField maxChoices = new JTextField(5);
 	
 	private ImageLoad il;
 	private ExtractRectangles er;
@@ -50,6 +55,8 @@ public class MainPanel extends JPanel implements ActionListener{
         ImagePreviewPanel preview = new ImagePreviewPanel();
         fc.setAccessory(preview);
         fc.addPropertyChangeListener(preview);
+        fc.setMultiSelectionEnabled(true);
+        //File[] files = fc.getSelectedFiles();
         
         //new ExtractVoteArea(this);
         //DrawRect drawRect = new DrawRect();
@@ -58,6 +65,7 @@ public class MainPanel extends JPanel implements ActionListener{
 		this.setLayout(new MigLayout());
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
 		showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
+		categorize.setLayout(new MigLayout());
 		
 		sidePanel.setBorder(
                 BorderFactory.createTitledBorder("Options")
@@ -79,9 +87,11 @@ public class MainPanel extends JPanel implements ActionListener{
 		sidePanel.add(btnSelectBallot, "wrap");
 		sidePanel.add(btnGetVoteArea, "wrap");
 		sidePanel.add(btnGetNames, "wrap");
+		sidePanel.add(btnCategorizeNames, "wrap");
 		
 		btnGetVoteArea.setEnabled(false);
 		btnGetNames.setEnabled(false);
+		btnCategorizeNames.setEnabled(false);
 
         this.revalidate();
 
@@ -91,6 +101,7 @@ public class MainPanel extends JPanel implements ActionListener{
 		btnSelectBallot.addActionListener(this);
 		btnGetVoteArea.addActionListener(this);
 		btnGetNames.addActionListener(this);
+		btnCategorizeNames.addActionListener(this);
 		
 		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -107,10 +118,11 @@ public class MainPanel extends JPanel implements ActionListener{
 			
 			int returnVal = fc.showOpenDialog(MainPanel.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                
-                il = new ImageLoad(file.getName(), this);
-
+				
+				File file = fc.getSelectedFile();
+				il = new ImageLoad(file.getName(), this);
+				
+				
         		//sidePanel.add(btnGetVoteArea, "wrap");
                 btnGetVoteArea.setEnabled(true);
         		
@@ -118,7 +130,6 @@ public class MainPanel extends JPanel implements ActionListener{
         		this.validate();
         		this.repaint();
             }
-			
 		}
 		
 		//this can only be accessed if there is a ballot loaded in the program 
@@ -129,7 +140,6 @@ public class MainPanel extends JPanel implements ActionListener{
 			btnGetNames.setEnabled(true);
 		}
 		
-		
 		//this can only be accessed if there is a ballot is already cropped
 		else if (e.getSource() == btnGetNames) {
 			
@@ -137,10 +147,34 @@ public class MainPanel extends JPanel implements ActionListener{
 				//System.out.println("GOOOOO");
 				er = new ExtractRectangles(il.getCroppedImage());
 				er.getNamesRect(il.contours);
-				er.extractText();
+				//er.extractText();
+				btnCategorizeNames.setEnabled(true);
 				
 			//}
 
+		}
+		
+		//this can only be accessed if there is a ballot is already cropped
+		else if (e.getSource() == btnCategorizeNames) {
+			
+			int returnVal = fc.showOpenDialog(MainPanel.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				
+				File[] files = fc.getSelectedFiles();
+				
+				System.out.println("Number of files: " + files.length);
+                
+				for (File file : files) {
+					System.out.println(file.getName());
+                }
+				
+        		//sidePanel.add(btnGetVoteArea, "wrap");
+                btnGetVoteArea.setEnabled(true);
+        		
+        		// TODO needs to be furnished. button sizes should be uniform
+        		this.validate();
+        		this.repaint();
+            }
 		}
 	}
 	

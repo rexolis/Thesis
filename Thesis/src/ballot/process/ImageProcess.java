@@ -152,5 +152,13 @@ public abstract class ImageProcess {
 		
 		return gaussianBlur;
 	}
+	
+	public static double imgRatio(int newSize, int origSize) {
+
+		double imgRatio;
+		imgRatio = (double)(newSize) / (double)(origSize);
+		
+		return imgRatio;
+	}
 
 }
