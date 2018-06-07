@@ -2,36 +2,49 @@ package ballot.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.*;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 
 import org.opencv.core.Rect;
 
+import ballot.process.ExtractRectangles;
+import ballot.process.ExtractSelection;
 import net.miginfocom.swing.MigLayout;
 
-public class ShowLabel extends JPanel{
+public class ShowLabel extends JPanel {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int x, y, x2, y2; //coordinates for the JLabel
-	private int xp, yp, xp2, yp2; //coordinates for the JPanel
+	private int x, y, x2, y2, prevY2; //coordinates for the JLabel
+	//private int xp, yp, xp2, yp2; //coordinates for the JPanel
 	private double widthRatio, heightRatio;
+	private boolean downward;
 	
-	public Rect scaledSelection;
-
+	public Rect upscaledDim;
     JScrollPane sp;
-	
 	public JLabel lbl1;
 	
-	public ShowLabel(JPanel showPanel) {
+
+	public ExtractRectangles er;
+	public ExtractSelection es;
+	
+	public ShowLabel() {
+		
+		//this.er = new ExtractRectangles(new Mat());
 		
 		setLayout(new MigLayout());
 		lbl1 = new JLabel();
+		lbl1.setAutoscrolls(true);
         /*lbl1.setBorder(
             BorderFactory.createEtchedBorder()
         );*/
@@ -43,18 +56,6 @@ public class ShowLabel extends JPanel{
 //        sp = new JScrollPane(this);
         add(sp, "w 1000, h 670");
 
-        //create mouse listener
-        x = y = x2 = y2 = 0; //initialize var for drawing
-      	MyMouseListener listenerLabel = new MyMouseListener();
-      	lbl1.addMouseListener(listenerLabel);
-      	lbl1.addMouseMotionListener(listenerLabel);
-//	  	this.addMouseListener(listenerLabel);
-//	  	this.addMouseMotionListener(listenerLabel);
-      	
-//		MyMouseListenerP listenerPanel = new MyMouseListenerP();
-//		this.addMouseListener(listenerPanel);
-//		this.addMouseMotionListener(listenerPanel);
-		
 	}
 	
 	public JLabel getJLabel() {
@@ -66,6 +67,7 @@ public class ShowLabel extends JPanel{
 		
 		widthRatio = width;
 		heightRatio = height;
+		//System.out.println("Image Ratio: " + widthRatio + ", " + heightRatio);
 		
 	}
 
@@ -79,37 +81,25 @@ public class ShowLabel extends JPanel{
     }
 
     public void setEndPoint(int x, int y) {
-        x2 = (x);
+       
+    	prevY2 = y2;
+    	
+    	x2 = (x);
         y2 = (y);
+        
+        if(prevY2 < y2) {
+        	//do this
+        	downward = true;
+        	System.out.println("Downward");
+        }else {
+        	//upward
+        	downward = false;
+        	System.out.println("Upward");
+        }
         
         System.out.println("endPoint x: " + x2 + ", y: " + y2);
     }
 
-//    //PANEL
-//    
-//	public void setStartPointP(int x, int y) {
-//        this.xp = x;
-//        this.yp = y;
-//        
-//        System.out.println("startPointP x: " + this.xp + ", y: " + this.yp);
-//    }
-//
-//    public void setEndPointP(int x, int y) {
-//        xp2 = (x);
-//        yp2 = (y);
-//        
-//        System.out.println("endPointP x: " + xp2 + ", y: " + yp2);
-//    }
-
-//    public void setLabelSelection(int x, int y, int x2, int y2) {
-//        int px = Math.min(x,x2);
-//        int py = Math.min(y,y2);
-//        int pw = Math.abs(x-x2);
-//        int ph = Math.abs(y-y2);
-//        //g.drawRect(px, py, pw, ph);
-//        System.out.println("Rectangle: " + Math.min(x,x2) + ", " + Math.min(y,y2) + ", " + pw + ", " + ph);
-//        
-//    }
 
     public void drawPerfectRect(Graphics g, int x, int y, int x2, int y2) {
         int px = Math.min(x,x2);
@@ -117,9 +107,37 @@ public class ShowLabel extends JPanel{
         int pw = Math.abs(x-x2);
         int ph = Math.abs(y-y2);
         g.drawRect(px, py, pw, ph);
-        System.out.println("Rectangle: " + Math.min(x,x2) + ", " + Math.min(y,y2) + ", " + pw + ", " + ph);
+        upscaledDim = new Rect(
+        		(int)(px/widthRatio), 
+        		(int)(py/heightRatio), 
+        		(int)(pw/widthRatio), 
+        		(int)(ph/heightRatio)
+        		);
+        //System.out.println("Rectangle: " + Math.min(x,x2) + ", " + Math.min(y,y2) + ", " + pw + ", " + ph);
         
     }
+    
+    public void setScaledSelection() {
+
+    	er.setScaledSelection(upscaledDim);
+    	es.setRect(upscaledDim);
+    	//System.out.println("Can i access a mat instance from another class? " + er.src);
+    }
+    
+    public void setERInstance(ExtractRectangles er) {
+    	
+    	this.er = er;
+    	
+    	 //create mouse listener
+        x = y = x2 = y2 = prevY2 = 0; //initialize var for drawing
+      	MyMouseListener listenerLabel = new MyMouseListener();
+      	lbl1.addMouseListener(listenerLabel);
+      	lbl1.addMouseMotionListener(listenerLabel);
+    }
+
+	public void setESInstance(ExtractSelection es) {
+    	this.es = es;
+	}
 
 	@Override
     public void paint(Graphics g) {
@@ -127,48 +145,62 @@ public class ShowLabel extends JPanel{
         super.paint(g);
         g.setColor(Color.RED);
         drawPerfectRect(g, x, y, x2, y2);
-//        drawPerfectRect(g, xp, yp, xp2, yp2);
         //System.out.println("FUCK YOU");
     }
     
     //LABEL
     
     class MyMouseListener extends MouseAdapter {
-
+    	
+    	Rectangle visible;
+    	JViewport viewPort;
+    	
         public void mousePressed(MouseEvent e) {
             setStartPoint(e.getX(), e.getY());
-            System.out.println("THIS IS A " + e.getSource().getClass());
         }
 
         public void mouseDragged(MouseEvent e) {
             setEndPoint(e.getX(), e.getY());
+            
+            Rectangle visible = getJLabel().getVisibleRect();
+            //TODO get current location
+            //if(mouse location gets nearer to the boundary, height)
+            JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, getJLabel());
+            System.out.println("Current visible view:  " + visible);
+
+        	Rectangle view = viewPort.getViewRect();
+        	System.out.println("Mouse position: " + e.getPoint().y);
+        	if(e.getPoint().y > (view.height - 30) && downward) {
+            	//determine if the mouse was dragged downwards or upwards
+            	
+            	view.x = 0;
+            	view.y += 10;
+            	
+            	getJLabel().scrollRectToVisible(view);
+            	
+            }else if(((e.getPoint().y - view.y) < 30) && !downward) {
+            	view.x = 0;
+            	view.y = Math.abs(view.y - 10);
+            	
+            	getJLabel().scrollRectToVisible(view);
+            	
+            }
+            
             repaint();
         }
 
         public void mouseReleased(MouseEvent e) {
             setEndPoint(e.getX(), e.getY());
+            System.out.println("Rectangle: " + Math.min(x,x2) + ", " + Math.min(y,y2) + ", " + Math.abs(x-x2) + ", " + Math.abs(y-y2));
+            setScaledSelection();
+            
             repaint();
         }
+        
+        public void mouseMoved(MouseEvent e) {
+        	
+        }
     }
-    
-    
-//    //PANEL
-//    
-//    class MyMouseListenerP extends MouseAdapter {
-//
-//        public void mousePressed(MouseEvent e) {
-//            setStartPointP(e.getX(), e.getY());
-//        }
-//
-//        public void mouseDragged(MouseEvent e) {
-//            setEndPointP(e.getX(), e.getY());
-//            repaint();
-//        }
-//
-//        public void mouseReleased(MouseEvent e) {
-//            setEndPointP(e.getX(), e.getY());
-//            repaint();
-//        }
-//    }
+   
 
 }

@@ -12,14 +12,25 @@ import ballot.view.ShowResults;
 
 public class ExtractRectangles extends ImageProcess {
 	
-	public Mat src, rectangleName;
+	public Mat src, rectangleName, blur, userSelection;
+	public Rect upscaledDim;
+	private ExtractSelection es;
+	//private Rect ;
 	
 
 	public ExtractRectangles(Mat src) {
 		
-		this.src = gaussianBlur(src);
+		if(src != null) {
+			this.src = src;
+			blur = gaussianBlur(src);
+		}
+		else {
+			System.out.println("SHOWLABEL CLASS");
+		}
 		
 	}
+	
+	//public ExtractRectangles() {}
 	
 	public void getNamesRect(List<MatOfPoint> contours) {
 		
@@ -33,12 +44,10 @@ public class ExtractRectangles extends ImageProcess {
 					//System.out.println(i+ ". Current rect: " + rect);
 					rectangleName = cropImage(src, rect);
 					saveImgRect("temp/name" + j++ + ".png" );
-					
 				}
 			}
 		}
-		
-		
+		//extractText();
 	}
 	
 	public void saveImgRect(String filename) {
@@ -50,5 +59,16 @@ public class ExtractRectangles extends ImageProcess {
 		
 		new OCR().fileTraverse();
 	}
-
+	
+	public void setScaledSelection(Rect upscaledDim) {
+		
+		this.upscaledDim = upscaledDim;
+		System.out.println("scaled image dimension: " + this.upscaledDim);
+		
+	}
+	
+	public void setESInstance(ExtractSelection es) {
+    	this.es = es;
+	}
+	
 }

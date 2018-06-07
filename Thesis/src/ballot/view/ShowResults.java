@@ -51,7 +51,7 @@ public class ShowResults extends ImageProcess{
 		
 //		System.out.println("Original image: " + imgSize);
 //		System.out.println("Scaled image: " + newImgSize);
-		System.out.println("Image Ratio: " + widthRatio + ", " + heightRatio);
+//		System.out.println("Image Ratio: " + widthRatio + ", " + heightRatio);
 		
 		Image scaledImg = img.getScaledInstance(newImgSize.width, newImgSize.height,
 		        Image.SCALE_DEFAULT);

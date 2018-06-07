@@ -160,5 +160,32 @@ public abstract class ImageProcess {
 		
 		return imgRatio;
 	}
+	
+	public List<Mat> getNamesMat(List<MatOfPoint> contours, Mat src) {
+		
+		Mat rectangleName;
+		List<Mat> names = new ArrayList<Mat>(); 
+		
+		for(int i = 0, j = 1; i < contours.size(); i++){
+			if (Imgproc.contourArea(contours.get(i)) > 4000 ){
+
+				Rect rect = Imgproc.boundingRect(contours.get(i));
+				
+				//prevents the largest contour to be included which is the whole picture
+				if (rect.height > 28 && rect.x != 0 && rect.y != 0){
+					//System.out.println(i+ ". Current rect: " + rect);
+					rectangleName = cropImage(src, rect);
+					names.add(rectangleName);
+					//saveImgRect("temp/name" + j++ + ".png" );
+					
+				}
+			}
+		}
+		return names;
+		
+		//extractText();
+		
+		
+	}
 
 }

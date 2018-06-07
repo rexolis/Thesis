@@ -11,7 +11,7 @@ import ballot.view.MainPanel;
 
 public class ImageLoad{
 	
-	private Mat src, cropped, srcColored;
+	private Mat src, cropped, srcColored, userSelection;
 	private ExtractVoteArea extract;
 	public List<MatOfPoint> contours;
 	
@@ -23,7 +23,7 @@ public class ImageLoad{
         
         //Load a colored version of image
         srcColored = Imgcodecs.imread(filename, Imgcodecs.IMREAD_COLOR);
-        System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
+        //System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
         
         // Check if image is loaded fine
         if( src.empty() ) {
@@ -38,22 +38,25 @@ public class ImageLoad{
 	}
 	
 	public Mat getImg () {
-		
 		return src;
 	}
 	
 	//updates the image with the voting area only
 	public void setCroppedImage (Mat cropped) {
-		
 		this.cropped = cropped;
-		
 	}
 	
 	//returns the cropped image (with the voting area)
 	public Mat getCroppedImage () {
-		
-		return this.cropped;
-		
+		return cropped;
+	}
+	
+	public void setUserSelection(Mat userSelection) {
+		this.userSelection = userSelection;
+	}
+	
+	public Mat getUserSelection() {
+		return userSelection;
 	}
 	
 	//processes the cropped image to update the contours for further processing
@@ -61,7 +64,7 @@ public class ImageLoad{
 		
 		//this.cropped is the updated image
 		//false means that this is not the original image
-		extract.detectVotingArea(this.cropped, false);
+		extract.detectVotingArea(cropped, false);
 		contours = extract.getContours();
 		
 	}

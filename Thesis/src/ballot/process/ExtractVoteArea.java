@@ -20,8 +20,8 @@ public class ExtractVoteArea extends ImageProcess {
 	private Mat src;
 	private PrintWriter pw;
 	private File filename;
+	private boolean newImage;
 	
-	//private ImageProcess ip;
 	private ImageLoad imageLoad;
 	private MainPanel frame;
 	private ShowResults showResults;
@@ -50,6 +50,8 @@ public class ExtractVoteArea extends ImageProcess {
 		//Mat colored;
 		List<MatOfPoint> contours;
 		
+		this.newImage = newImage;
+		
 		//create a local input image
 		this.src = src; 
 		
@@ -70,16 +72,15 @@ public class ExtractVoteArea extends ImageProcess {
 		//CV_8UC3 format
         this.src = toRGB(src);
         
-        
 		//show the loaded image into frame
-		img = ImageProcess.createAwtImage(this.src);
+		img = createAwtImage(this.src);
 		showResults.showImage(img, this.frame, filename);
         
-        extractContours(contours, src);
+        drawContours(contours, src);
         
         //extracts the voting area if it is the first call of this method
         if(newImage == true) {
-        	System.out.println(votingArea.x +","+votingArea.y+","+votingArea.height+","+votingArea.width + " [Contour Area: " + secondLargest + "]");
+        	//System.out.println("Voting Area: " + votingArea.x +","+votingArea.y+","+votingArea.height+","+votingArea.width + " [Contour Area: " + secondLargest + "]");
         	updateVotingArea(src);
         }
         //for cropped
@@ -88,7 +89,7 @@ public class ExtractVoteArea extends ImageProcess {
         }
 	}
 	
-	public void extractContours(List<MatOfPoint> contours, Mat src) {
+	public void drawContours(List<MatOfPoint> contours, Mat src) {
 		
 		//Finding the contours 
         for(int i = 0; i < contours.size(); i++){
@@ -96,26 +97,18 @@ public class ExtractVoteArea extends ImageProcess {
 	        //System.out.println("Contour Area: " + Imgproc.contourArea(contours.get(i)));
 	        
 	        if (Imgproc.contourArea(contours.get(i)) > 4000 ){
-	        	
 	            Rect rect = Imgproc.boundingRect(contours.get(i));
 	            //System.out.println(rect.height);
 	            currLargest = Imgproc.contourArea(contours.get(i));
-	            
 	            //Draw rectangle into the image
 	            if (rect.height > 28){
 		            //System.out.println(i + ". " + rect.x +","+rect.y+","+rect.height+","+rect.width);
 		            pw.println(i + ". " + rect.x +","+rect.y+","+rect.height+","+rect.width + " [Contour Area: " + Imgproc.contourArea(contours.get(i)) + "]");
 		            Imgproc.rectangle(this.src, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(0,0,255), 1, Imgproc.LINE_AA, 0);
 	            }
-	            
 	            //getting the second largest contour next to the whole document's contour
-	            if(currLargest > largest) {
-	            	secondLargest = largest;
-	            	votingArea = document;
-	            	
-	            	largest = currLargest;
-	            	document = rect;
-	            }
+	            if(newImage)
+	            	setVotingArea(rect);
 	        }
         }
 		
@@ -132,5 +125,17 @@ public class ExtractVoteArea extends ImageProcess {
 	public List<MatOfPoint> getContours() {
 		
 		return contours;
+	}
+	
+	public void setVotingArea(Rect rect) {
+		
+		if(currLargest > largest) {
+        	secondLargest = largest;
+        	votingArea = document;
+        	
+        	largest = currLargest;
+        	document = rect;
+        }
+		
 	}
 }
