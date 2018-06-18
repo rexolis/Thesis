@@ -59,7 +59,7 @@ public class MainPanel extends JPanel implements ActionListener{
         
 		this.setLayout(new MigLayout());
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
-		showPanel.setLayout(new MigLayout("wrap 3", "[]10[]"));
+		showPanel.setLayout(new MigLayout());
 		//categorize.setLayout(new MigLayout());
 		
 		sidePanel.setBorder(
@@ -150,15 +150,18 @@ public class MainPanel extends JPanel implements ActionListener{
 			
 			er.setESInstance(es);
 			es.extractSelection();
+			
 			btnPrintNames.setEnabled(true);
 
 		}
 
 		else if (e.getSource() == btnPrintNames) {
 			
-			er.setESInstance(es);
-			es.extractSelection();
-			btnPrintNames.setEnabled(true);
+			es.showSelection();
+			
+//			er.setESInstance(es);
+//			es.extractSelection();
+//			btnPrintNames.setEnabled(true);
 
 		}
 		

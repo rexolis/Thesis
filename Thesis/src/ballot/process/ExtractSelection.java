@@ -9,10 +9,11 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 
 import ballot.view.ShowResults;
+import ballot.view.ShowSelection;
 
 public class ExtractSelection extends ImageProcess {
 
-	private Mat userSelection, src;
+	public Mat userSelection, src;
 	private Rect rect;
 	private List<Mat> names;
     private List<MatOfPoint> contours;
@@ -42,11 +43,16 @@ public class ExtractSelection extends ImageProcess {
 	
 	public void getNames() {
 
-		contours = findContours(threshold(userSelection));
+		contours = findContours(thresholdBinary(userSelection));
 		names = getNamesMat(contours, userSelection);
 		
 		for(int i=0,j=1; i < names.size(); i++) {
 			new ShowResults().saveImage(names.get(i), "tempNew/candidate" + j++ + ".png" );
 		}
+	}
+	
+	public void showSelection() {
+		
+		new ShowSelection(getUserSelection());
 	}
 }

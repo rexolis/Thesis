@@ -61,7 +61,7 @@ public class ExtractVoteArea extends ImageProcess {
          
         //Binarization of the grayscaled Mat src
 		//CV_8UC1 format
-        binarized = threshold(this.src);
+        binarized = thresholdBinary(this.src);
         
         //Finding contours
         //needs CV_8UC1 image format or grayscale (Imgproc.BGR2GRAY)

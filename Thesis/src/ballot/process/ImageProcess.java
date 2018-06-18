@@ -18,18 +18,31 @@ import org.opencv.imgproc.Imgproc;
  *
  */
 public abstract class ImageProcess {
-	
+
 	/**
 	 * 
 	 * @param img is the grayscale input image
 	 * @return returns the binarized image (fully b&w instead of grayscale)
 	 */
-	public Mat threshold(Mat img) {
+	public Mat thresholdBinary(Mat img) {
 		
 		Mat binarized = new Mat();
 		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY);
 		
 		return binarized;
+	}
+	
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the truncated image
+	 */
+	public Mat thresholdTruncate(Mat img) {
+		
+		Mat truncate = new Mat();
+		Imgproc.threshold(img, truncate, 200, 255, Imgproc.THRESH_TRUNC);
+		
+		return truncate;
 	}
 	
 	/**
@@ -69,7 +82,7 @@ public abstract class ImageProcess {
 	 */
 	public Mat cropImage(Mat img, Rect rect) {
 		
-		//System.out.println("Voting Area" + votingArea);
+		
 		Mat cropped = new Mat(img, rect);
 		
 		return cropped;
@@ -153,6 +166,12 @@ public abstract class ImageProcess {
 		return gaussianBlur;
 	}
 	
+	/**
+	 * 
+	 * @param newSize new dimension of the image
+	 * @param origSize original dimension of the image
+	 * @return returns the aspect ratio of the image with respect to the component it is in
+	 */
 	public static double imgRatio(int newSize, int origSize) {
 
 		double imgRatio;
