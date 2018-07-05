@@ -8,10 +8,9 @@ import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-public class OCR {
+public class OCR extends ImageProcess{
 
 	ITesseract tess;
-	private static List<File> files = new ArrayList<>();
 	
 	public OCR() {
 		 tess = new Tesseract(); 
@@ -38,20 +37,5 @@ public class OCR {
         	
         	writeToTxt(myfiles.get(i));
         }
-    }
-
-    //traverse each files in the directory and add it to the List
-    public static List<File> doListing(File dirName) {
-        File[] fileList = dirName.listFiles();
-        
-        for (File file : fileList) {
-            if (file.isFile()) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                files.add(file);
-                doListing(file);
-            }
-        }
-        return files;
     }
 }

@@ -18,17 +18,20 @@ public class ImageLoad{
 	public ImageLoad(String args, MainPanel frame) {
 		
 		String filename = "images/" + args;
+		
         // Load an image in a grayscale format
         src = Imgcodecs.imread(filename, Imgcodecs.IMREAD_GRAYSCALE);
         
         //Load a colored version of image
         srcColored = Imgcodecs.imread(filename, Imgcodecs.IMREAD_COLOR);
-        //System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
+        System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
         
         // Check if image is loaded fine
         if( src.empty() ) {
-            System.out.println("Error opening image!");
-            System.out.println("Program Arguments: [image_name -- default "
+        	System.out.println("src: " + src);
+        	System.out.println("srcColored: " + srcColored);
+            System.err.println("Error opening image!");
+            System.err.println("Program Arguments: [image_name -- default "
                     + filename +"] \n");
             System.exit(-1);
         }

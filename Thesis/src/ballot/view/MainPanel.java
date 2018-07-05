@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import ballot.process.ExtractRectangles;
 import ballot.process.ExtractSelection;
 import ballot.process.ImageLoad;
+import ballot.process.OCR;
 import net.miginfocom.swing.MigLayout;
 
 public class MainPanel extends JPanel implements ActionListener{
@@ -150,19 +151,27 @@ public class MainPanel extends JPanel implements ActionListener{
 			
 			er.setESInstance(es);
 			es.extractSelection();
-			
+
+			es.showSelection(this);
 			btnPrintNames.setEnabled(true);
 
 		}
 
 		else if (e.getSource() == btnPrintNames) {
 			
-			es.showSelection();
+			es.preprocessCells();
+			//es.extractText();
+			
 			
 //			er.setESInstance(es);
 //			es.extractSelection();
 //			btnPrintNames.setEnabled(true);
 
+		}
+		
+		else {
+			System.out.println("clicked something else");
+			
 		}
 		
 		//this can only be accessed if there is a ballot is already cropped

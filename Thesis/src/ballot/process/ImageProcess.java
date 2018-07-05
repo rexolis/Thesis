@@ -4,13 +4,16 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 /**
  * 
@@ -43,6 +46,27 @@ public abstract class ImageProcess {
 		Imgproc.threshold(img, truncate, 200, 255, Imgproc.THRESH_TRUNC);
 		
 		return truncate;
+	}
+	
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the blurred image
+	 */
+	public Mat gaussianBlur(Mat img) {
+		
+		Mat gaussianBlur = new Mat();
+		Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
+		
+		return gaussianBlur;
+	}
+	
+	public Mat sharpen(Mat img) {
+		Mat dest = new Mat(img.rows(), img.cols(), img.type());
+		
+		Core.addWeighted(img, 1.5, dest, -0.5, 0, dest); 
+		
+		return dest;
 	}
 	
 	/**
@@ -155,19 +179,6 @@ public abstract class ImageProcess {
 	
 	/**
 	 * 
-	 * @param img is the grayscale input image
-	 * @return returns the blurred image
-	 */
-	public Mat gaussianBlur(Mat img) {
-		
-		Mat gaussianBlur = new Mat();
-		Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
-		
-		return gaussianBlur;
-	}
-	
-	/**
-	 * 
 	 * @param newSize new dimension of the image
 	 * @param origSize original dimension of the image
 	 * @return returns the aspect ratio of the image with respect to the component it is in
@@ -203,8 +214,24 @@ public abstract class ImageProcess {
 		return names;
 		
 		//extractText();
-		
-		
 	}
+	
+	//traverse each files in the directory and add it to the List
+    public static List<File> doListing(File dirName) {
+
+    	List<File> files = new ArrayList<>();
+    	
+        File[] fileList = dirName.listFiles();
+        
+        for (File file : fileList) {
+            if (file.isFile()) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                files.add(file);
+                doListing(file);
+            }
+        }
+        return files;
+    }
 
 }
