@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +27,7 @@ public class MainPanel extends JPanel implements ActionListener{
 	//JPanel mainPanel = new JPanel();
 	JPanel sidePanel = new JPanel();
 	JPanel showPanel = new JPanel();
+	JPanel imgprocPanel = new JPanel();
 	//JPanel categorize = new JPanel();
     JFileChooser fc;
     JScrollPane sp;
@@ -36,6 +38,11 @@ public class MainPanel extends JPanel implements ActionListener{
 	JButton btnSetSelection = new JButton("Set Selection");
 	JButton btnExtractSelection = new JButton("Extract Selection");
 	JButton btnPrintNames = new JButton("Print Names");
+
+	JCheckBox binary = new JCheckBox("Binary");
+	JCheckBox trunc = new JCheckBox("Truncate");
+	JCheckBox gaussian = new JCheckBox("Gaussian Blur");
+	JCheckBox sharpen = new JCheckBox("Sharpen");
 	
 	private ImageLoad il;
 	private ExtractRectangles er;
@@ -61,6 +68,7 @@ public class MainPanel extends JPanel implements ActionListener{
 		this.setLayout(new MigLayout());
 		sidePanel.setLayout(new MigLayout("gap 5 5, ins 10, wrap 3"));
 		showPanel.setLayout(new MigLayout());
+		imgprocPanel.setLayout(new MigLayout());
 		//categorize.setLayout(new MigLayout());
 		
 		sidePanel.setBorder(
@@ -68,6 +76,9 @@ public class MainPanel extends JPanel implements ActionListener{
         );
 		showPanel.setBorder(
                 BorderFactory.createTitledBorder("Output")
+        );
+		imgprocPanel.setBorder(
+                BorderFactory.createTitledBorder("Image Processing")
         );
 
 		showPanel.add(showLabel, "w 1000, h 670");
@@ -78,6 +89,11 @@ public class MainPanel extends JPanel implements ActionListener{
 		);*/
         //sp = new JScrollPane(showLabel.lbl1);
         //showPanel.add(sp, "w 1000, h 670");
+
+		imgprocPanel.add(binary, "wrap -5");
+		imgprocPanel.add(trunc, "wrap -5");
+		imgprocPanel.add(gaussian, "wrap -5");
+		imgprocPanel.add(sharpen, "wrap");
 		
         
 		sidePanel.add(btnSelectBallot, "wrap");
@@ -85,6 +101,7 @@ public class MainPanel extends JPanel implements ActionListener{
 		sidePanel.add(btnSetSelection, "wrap");
 		sidePanel.add(btnExtractSelection, "wrap");
 		sidePanel.add(btnPrintNames, "wrap");
+		sidePanel.add(imgprocPanel);
 		
 		btnGetVoteArea.setEnabled(false);
 		btnSetSelection.setEnabled(false);
@@ -158,8 +175,23 @@ public class MainPanel extends JPanel implements ActionListener{
 		}
 
 		else if (e.getSource() == btnPrintNames) {
+			boolean binaryCheck, truncCheck, gaussianCheck, sharpenCheck;
+			binaryCheck = truncCheck = gaussianCheck = sharpenCheck = false;
 			
-			es.preprocessCells();
+			if(binary.isSelected()) {
+				binaryCheck = true;
+			}
+			if(trunc.isSelected()) {
+				truncCheck = true;
+			}
+			if(gaussian.isSelected()) {
+				gaussianCheck = true;
+			}
+			if(sharpen.isSelected()) {
+				sharpenCheck = true;
+			}
+			
+			es.preprocessCells(binaryCheck, truncCheck, gaussianCheck, sharpenCheck);
 			//es.extractText();
 			
 			

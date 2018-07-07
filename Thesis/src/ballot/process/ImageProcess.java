@@ -57,13 +57,14 @@ public abstract class ImageProcess {
 		
 		Mat gaussianBlur = new Mat();
 		Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
-		
+		//Imgproc.GaussianBlur(img, gaussianBlur, new Size(5,5), 0, 0);
 		return gaussianBlur;
 	}
 	
 	public Mat sharpen(Mat img) {
-		Mat dest = new Mat(img.rows(), img.cols(), img.type());
 		
+		//dest and img must have same size of rows,cols,&type
+		Mat dest = new Mat(img.rows(), img.cols(), img.type());
 		Core.addWeighted(img, 1.5, dest, -0.5, 0, dest); 
 		
 		return dest;

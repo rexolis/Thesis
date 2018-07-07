@@ -17,9 +17,11 @@ import ballot.view.ShowSelection;
 public class ExtractSelection extends ImageProcess {
 
 	public Mat userSelection, src;
+	private Mat cell, blur, sharp, trunc;
 	private Rect rect;
 	private List<Mat> names;
     private List<MatOfPoint> contours;
+    private List<File> candidateCells;
 	
 	public ExtractSelection(Mat src) {
 		
@@ -64,20 +66,21 @@ public class ExtractSelection extends ImageProcess {
 		new OCR().fileTraverse();
 	}
 	
-	public void preprocessCells() {
-		Mat src, blur, sharp;
+	public void preprocessCells(boolean binaryCheck, boolean truncCheck, boolean gaussianCheck, boolean sharpenCheck) {
 		String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\temp";
-		List<File> candidateCells = doListing(new File(dirName));
+		candidateCells = doListing(new File(dirName));
 		
 		for(int i=0, j=1; i<candidateCells.size(); i++) {
-        	src = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
-        	blur = gaussianBlur(src);
-        	
+        	cell = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
+        	blur = gaussianBlur(cell);
         	sharp = sharpen(blur);
-        	new ShowResults().saveImage(sharp, "tempNew/candidate" + j++ + ".png" );
         	
-			
-			//writeToTxt(candidateCells.get(i));
+        	//blur the sharpened img
+        	//blur = gaussianBlur(sharp);
+        	trunc = thresholdTruncate(blur);
+        	new ShowResults().saveImage(blur, "tempNew/candidate" + j++ + ".png" );
+        	
         }
+		extractText();
 	}
 }
