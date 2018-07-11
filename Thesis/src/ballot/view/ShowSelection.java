@@ -31,18 +31,13 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 	private JTextField position = new JTextField(30);
 	private JTextField choice = new JTextField(30);
 	
-	private int choiceMax;
 	private BufferedImage selectionAwt;
-	
-	private ShowResults showResults;
-	private MainPanel mp;
 	
 	public ShowSelection(Mat selection, MainPanel mp) {
 		
 		frame = new JFrame("User Selection");
 		selectionPanel = new JPanel();
 		this.selection = selection;
-		this.mp = mp;
 		
 		selectionAwt = createAwtImage(selection);
 

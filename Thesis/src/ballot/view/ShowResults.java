@@ -20,9 +20,7 @@ public class ShowResults extends ImageProcess{
 	public Dimension imgSize, newImgSize;
 	public double widthRatio, heightRatio;
 	
-	public ShowResults() {
-		
-	}
+	public ShowResults() {}
 	
 	public void showWindow(Mat img, String filename) {
 		
@@ -38,7 +36,7 @@ public class ShowResults extends ImageProcess{
 	}
 	
 	public void showImage(BufferedImage img, MainPanel frame, File filename) {
-
+		
 		imgSize = new Dimension(img.getWidth(), img.getHeight());
 		Dimension boundary = new Dimension(950, 2300);
 		
@@ -57,12 +55,12 @@ public class ShowResults extends ImageProcess{
 		        Image.SCALE_DEFAULT);
 		frame.showLabel.getJLabel().setIcon(new ImageIcon(scaledImg));
 		//frame.showLabel.getJLabel().setIcon(new ImageIcon(img));
-
-	
 	}
 	
 	public void saveImage(Mat src, String filename) {
 
         Imgcodecs.imwrite("images/" + filename, src);
 	}
+	
+	
 }

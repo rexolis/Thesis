@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import ballot.process.ExtractRectangles;
 import ballot.process.ExtractSelection;
 import ballot.process.ImageLoad;
-import ballot.process.OCR;
 import net.miginfocom.swing.MigLayout;
 
 public class MainPanel extends JPanel implements ActionListener{
@@ -95,13 +94,25 @@ public class MainPanel extends JPanel implements ActionListener{
 		imgprocPanel.add(gaussian, "wrap -5");
 		imgprocPanel.add(sharpen, "wrap");
 		
-        
+		/*ItemListener itemListener = new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED)
+					handleItemEvent(e);
+			}
+		};
+
+		binary.addItemListener(itemListener);
+		trunc.addItemListener(itemListener);
+		gaussian.addItemListener(itemListener);
+		sharpen.addItemListener(itemListener);*/
+		
 		sidePanel.add(btnSelectBallot, "wrap");
 		sidePanel.add(btnGetVoteArea, "wrap");
 		sidePanel.add(btnSetSelection, "wrap");
 		sidePanel.add(btnExtractSelection, "wrap");
 		sidePanel.add(btnPrintNames, "wrap");
-		sidePanel.add(imgprocPanel);
+		//sidePanel.add(imgprocPanel);
 		
 		btnGetVoteArea.setEnabled(false);
 		btnSetSelection.setEnabled(false);
@@ -127,6 +138,23 @@ public class MainPanel extends JPanel implements ActionListener{
 		repaint();
 		
 	}
+	
+	/*protected void handleItemEvent(ItemEvent e) {
+		if(e.getSource() == binary) {
+			System.out.println("Binary Ticked");
+		}
+		else if(e.getSource() == trunc) {
+			System.out.println("Truncate Ticked");
+		}
+		else if(e.getSource() == gaussian) {
+			System.out.println("Gaussian Blur Ticked");
+		}
+		else if(e.getSource() == sharpen) {
+			System.out.println("Sharpen Ticked");
+		}
+	}*/
+
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -228,6 +256,7 @@ public class MainPanel extends JPanel implements ActionListener{
 //            }
 //		}
 	}
+	
 	
 
 }

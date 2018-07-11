@@ -12,6 +12,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import com.recognition.software.jdeskew.ImageDeskew;
+
 import ballot.view.MainPanel;
 import ballot.view.ShowResults;
 
@@ -27,11 +29,11 @@ public class ExtractVoteArea extends ImageProcess {
 	private ShowResults showResults;
 	
 	//variables to hold the details of the second largest contour denoting the voting area
-    private double currLargest, largest, secondLargest;
+    private double currLargest, largest/*, secondLargest*/;
     private Rect votingArea, document;
     private List<MatOfPoint> contours;
     
-    private BufferedImage img;
+    private BufferedImage img, srcBI;
 
 	public ExtractVoteArea(Mat src, boolean newFile, ImageLoad imageLoad, MainPanel frame, File filename) {
 		
@@ -46,9 +48,9 @@ public class ExtractVoteArea extends ImageProcess {
     
     public void detectVotingArea(Mat src, boolean newImage) {
 		
-		Mat binarized;
-		//Mat colored;
+		Mat binarized, rotImage;
 		List<MatOfPoint> contours;
+		double skewAngle;
 		
 		this.newImage = newImage;
 		
@@ -71,6 +73,15 @@ public class ExtractVoteArea extends ImageProcess {
         //Resetting the image format to RBG from Grayscale before showing the detected rectangles in red
 		//CV_8UC3 format
         this.src = toRGB(src);
+        
+        //deskew the input image
+		srcBI = createAwtImage(this.src);
+        ImageDeskew id = new ImageDeskew(srcBI);
+		skewAngle = id.getSkewAngle();
+		System.out.println("Skew Angle: " + skewAngle);
+		
+		rotImage = deskew(src, skewAngle);
+		this.src = rotImage;
         
 		//show the loaded image into frame
 		img = createAwtImage(this.src);
@@ -130,7 +141,7 @@ public class ExtractVoteArea extends ImageProcess {
 	public void setVotingArea(Rect rect) {
 		
 		if(currLargest > largest) {
-        	secondLargest = largest;
+        	//secondLargest = largest;
         	votingArea = document;
         	
         	largest = currLargest;

@@ -17,7 +17,7 @@ import ballot.view.ShowSelection;
 public class ExtractSelection extends ImageProcess {
 
 	public Mat userSelection, src;
-	private Mat cell, blur, sharp, trunc;
+	private Mat cell, blur, sharp, trunc, binary;
 	private Rect rect;
 	private List<Mat> names;
     private List<MatOfPoint> contours;
@@ -73,12 +73,11 @@ public class ExtractSelection extends ImageProcess {
 		for(int i=0, j=1; i<candidateCells.size(); i++) {
         	cell = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
         	blur = gaussianBlur(cell);
-        	sharp = sharpen(blur);
-        	
-        	//blur the sharpened img
+        	sharp = sharpen(cell, blur);
+        	binary = thresholdBinary(sharp);
         	//blur = gaussianBlur(sharp);
-        	trunc = thresholdTruncate(blur);
-        	new ShowResults().saveImage(blur, "tempNew/candidate" + j++ + ".png" );
+        	//trunc = thresholdTruncate(blur);
+        	new ShowResults().saveImage(binary, "tempNew/candidate" + j++ + ".png" );
         	
         }
 		extractText();
