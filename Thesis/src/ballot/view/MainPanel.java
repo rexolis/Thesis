@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import ballot.process.ExtractRectangles;
 import ballot.process.ExtractSelection;
 import ballot.process.ImageLoad;
 import net.miginfocom.swing.MigLayout;
@@ -44,9 +43,10 @@ public class MainPanel extends JPanel implements ActionListener{
 	JCheckBox sharpen = new JCheckBox("Sharpen");
 	
 	private ImageLoad il;
-	private ExtractRectangles er;
+	//private ExtractRectangles er;
 	private ExtractSelection es;
-	public ShowLabel showLabel = new ShowLabel();
+	//public ShowLabel showLabel = new ShowLabel();
+	public ShowLabel2 showLabel2 = new ShowLabel2();
 	
 	
 	
@@ -80,7 +80,7 @@ public class MainPanel extends JPanel implements ActionListener{
                 BorderFactory.createTitledBorder("Image Processing")
         );
 
-		showPanel.add(showLabel, "w 1000, h 670");
+		showPanel.add(showLabel2.thisPanel, "w 1000, h 670");
 		
 		/*lbl1 = new JLabel();
 		lbl1.setBorder(
@@ -185,16 +185,17 @@ public class MainPanel extends JPanel implements ActionListener{
 		//this can only be accessed if there is a ballot is already cropped
 		else if (e.getSource() == btnSetSelection) {
 			
-			er = new ExtractRectangles(il.getCroppedImage());
+			//er = new ExtractRectangles(il.getCroppedImage());
 			es = new ExtractSelection(il.getCroppedImage());
-			showLabel.setERInstance(er);
-			showLabel.setESInstance(es);
+			//showLabel2.setERInstance(er);
+			showLabel2.addListeners();
+			showLabel2.setESInstance(es);
 			btnExtractSelection.setEnabled(true);
 
 		}
 		else if (e.getSource() == btnExtractSelection) {
 			
-			er.setESInstance(es);
+			//er.setESInstance(es);
 			es.extractSelection();
 
 			es.showSelection(this);

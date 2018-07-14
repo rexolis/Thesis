@@ -17,7 +17,7 @@ import ballot.view.ShowSelection;
 public class ExtractSelection extends ImageProcess {
 
 	public Mat userSelection, src;
-	private Mat cell, blur, sharp, trunc, binary;
+	private Mat cell, blur, sharp, /*trunc,*/ binary;
 	private Rect rect;
 	private List<Mat> names;
     private List<MatOfPoint> contours;
@@ -32,10 +32,17 @@ public class ExtractSelection extends ImageProcess {
 	public void extractSelection() {
 		
 		userSelection = cropImage(src, rect);
+		userSelection = deskewSelection();
 		Core.copyMakeBorder(userSelection, userSelection, 5, 5, 5, 5, Core.BORDER_REPLICATE, new Scalar(0,0,0));
 		//System.out.println(userSelection);
 		new ShowResults().saveImage(userSelection, "selection" + ".png" );
 		getNames();
+	}
+	
+	public Mat deskewSelection() {
+		Mat rotImage;
+		rotImage = deskew(userSelection, getSkewAngle(userSelection));
+		return rotImage;		
 	}
 
 	public Mat getUserSelection () {
@@ -72,7 +79,7 @@ public class ExtractSelection extends ImageProcess {
 		
 		for(int i=0, j=1; i<candidateCells.size(); i++) {
         	cell = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
-        	blur = gaussianBlur(cell);
+        	blur = gaussianBlur(cell, 1);
         	sharp = sharpen(cell, blur);
         	binary = thresholdBinary(sharp);
         	//blur = gaussianBlur(sharp);

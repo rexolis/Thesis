@@ -2,8 +2,6 @@ package ballot.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,6 +20,11 @@ import ballot.process.ExtractRectangles;
 import ballot.process.ExtractSelection;
 import net.miginfocom.swing.MigLayout;
 
+/*
+ * java class not in use anymore 
+ * 
+ * 
+ */
 public class ShowLabel extends JPanel {
 	
 	/**
@@ -195,8 +198,9 @@ public class ShowLabel extends JPanel {
         public void mousePressed(MouseEvent e) {
         	JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, getJLabel());
         	Rectangle view = viewPort.getViewRect();
-            //gets the location on the object with listener(JLabel in this case)
+            //getX, getY gets the location on the object with listener(JLabel in this case)
         	//we want this info
+        	// getPoint() gets the location of the click with respect to the container
         	setStartPoint(e.getX(), e.getY(), e.getPoint().x, (e.getPoint().y - view.y));
         	
 

@@ -12,7 +12,6 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import com.recognition.software.jdeskew.ImageDeskew;
 
 import ballot.view.MainPanel;
 import ballot.view.ShowResults;
@@ -33,7 +32,7 @@ public class ExtractVoteArea extends ImageProcess {
     private Rect votingArea, document;
     private List<MatOfPoint> contours;
     
-    private BufferedImage img, srcBI;
+    private BufferedImage img;
 
 	public ExtractVoteArea(Mat src, boolean newFile, ImageLoad imageLoad, MainPanel frame, File filename) {
 		
@@ -41,58 +40,66 @@ public class ExtractVoteArea extends ImageProcess {
 		this.frame = frame;
 		this.filename = filename;
 		showResults = new ShowResults();
-		detectVotingArea(src, newFile);
+		detectCandidateCells(src, newFile);
 		
 		
 	}
     
-    public void detectVotingArea(Mat src, boolean newImage) {
+    public void detectCandidateCells(Mat src, boolean newImage) {
 		
-		Mat binarized, rotImage;
+		Mat binarized, rotImage/*, canny, blur, sharp,
+		erode, dilate*/;
 		List<MatOfPoint> contours;
-		double skewAngle;
 		
 		this.newImage = newImage;
 		
-		//create a local input image
-		this.src = src; 
+		/*//create a local input image
+		this.src = src; */
 		
 		//System.out to .txt file
 		WriteText wt = new WriteText();
 		pw = wt.textWriter("output.txt");
          
+		//deskew the input image
+		/*srcBI = createAwtImage(src);
+        ImageDeskew id = new ImageDeskew(srcBI);
+		skewAngle = id.getSkewAngle();*/
+		//System.out.println("Skew Angle: " + skewAngle);
+		
+		rotImage = deskew(src, getSkewAngle(src));
+		//System.out.println(rotImage);
+		this.src = rotImage; 
+		 
         //Binarization of the grayscaled Mat src
 		//CV_8UC1 format
-        binarized = thresholdBinary(this.src);
+		
+		//blur = gaussianBlur(rotImage);
+		//canny = canny(this.src);
+		
+        binarized = thresholdBinary(rotImage);
+        showResults.saveImage(binarized, "binary.png");
+        /*dilate = dilate(binarized);
+        showResults.saveImage(dilate, "dilate.png");
+        erode = dilate(dilate);
+        showResults.saveImage(erode, "erode.png");*/
         
         //Finding contours
-        //needs CV_8UC1 image format or grayscale (Imgproc.BGR2GRAY)
+        //needs CV_8UC1 image format or grayscale (Imgproc. BGR2GRAY)
 		contours = findContours(binarized);
 		this.contours = contours;
-
-        //Resetting the image format to RBG from Grayscale before showing the detected rectangles in red
-		//CV_8UC3 format
-        this.src = toRGB(src);
-        
-        //deskew the input image
-		srcBI = createAwtImage(this.src);
-        ImageDeskew id = new ImageDeskew(srcBI);
-		skewAngle = id.getSkewAngle();
-		System.out.println("Skew Angle: " + skewAngle);
-		
-		rotImage = deskew(src, skewAngle);
-		this.src = rotImage;
         
 		//show the loaded image into frame
-		img = createAwtImage(this.src);
+		img = createAwtImage(binarized);
 		showResults.showImage(img, this.frame, filename);
         
-        drawContours(contours, src);
+		//Resetting the image format to RBG from Grayscale before showing the detected rectangles in red
+		//CV_8UC3 format
+        this.src = toRGB(src);
+        drawContours(this.contours);
         
         //extracts the voting area if it is the first call of this method
         if(newImage == true) {
-        	//System.out.println("Voting Area: " + votingArea.x +","+votingArea.y+","+votingArea.height+","+votingArea.width + " [Contour Area: " + secondLargest + "]");
-        	updateVotingArea(src);
+        	updateVotingArea(rotImage);
         }
         //for cropped
         else {
@@ -100,7 +107,7 @@ public class ExtractVoteArea extends ImageProcess {
         }
 	}
 	
-	public void drawContours(List<MatOfPoint> contours, Mat src) {
+	public void drawContours(List<MatOfPoint> contours) {
 		
 		//Finding the contours 
         for(int i = 0; i < contours.size(); i++){
@@ -115,7 +122,7 @@ public class ExtractVoteArea extends ImageProcess {
 	            if (rect.height > 28){
 		            //System.out.println(i + ". " + rect.x +","+rect.y+","+rect.height+","+rect.width);
 		            pw.println(i + ". " + rect.x +","+rect.y+","+rect.height+","+rect.width + " [Contour Area: " + Imgproc.contourArea(contours.get(i)) + "]");
-		            Imgproc.rectangle(this.src, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(0,0,255), 1, Imgproc.LINE_AA, 0);
+		            Imgproc.rectangle(src, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(0,0,255), 1, Imgproc.LINE_AA, 0);
 	            }
 	            //getting the second largest contour next to the whole document's contour
 	            if(newImage)

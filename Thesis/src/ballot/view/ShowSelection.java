@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class ShowSelection extends ImageProcess implements ActionListener{
 
-	private Mat selection;
+	//private Mat selection;
 	private JFrame frame;
 	private JPanel selectionPanel;
 	private JLabel selectionLabel = new JLabel();
@@ -37,7 +37,7 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 		
 		frame = new JFrame("User Selection");
 		selectionPanel = new JPanel();
-		this.selection = selection;
+		//this.selection = selection;
 		
 		selectionAwt = createAwtImage(selection);
 

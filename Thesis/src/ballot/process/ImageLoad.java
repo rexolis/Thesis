@@ -67,7 +67,7 @@ public class ImageLoad{
 		
 		//this.cropped is the updated image
 		//false means that this is not the original image
-		extract.detectVotingArea(cropped, false);
+		extract.detectCandidateCells(cropped, false);
 		contours = extract.getContours();
 		
 	}

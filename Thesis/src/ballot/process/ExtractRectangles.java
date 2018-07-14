@@ -9,12 +9,16 @@ import org.opencv.imgproc.Imgproc;
 
 import ballot.view.ShowResults;
 
-
+/*
+ * java class not in use anymore 
+ * 
+ * 
+ */
 public class ExtractRectangles extends ImageProcess {
 	
 	public Mat src, rectangleName, blur, userSelection;
 	public Rect upscaledDim;
-	private ExtractSelection es;
+	//private ExtractSelection es;
 	//private Rect ;
 	
 
@@ -22,7 +26,7 @@ public class ExtractRectangles extends ImageProcess {
 		
 		if(src != null) {
 			this.src = src;
-			blur = gaussianBlur(src);
+			//blur = gaussianBlur(src);
 		}
 		else {
 			System.out.println("SHOWLABEL CLASS");
@@ -67,8 +71,8 @@ public class ExtractRectangles extends ImageProcess {
 		
 	}
 	
-	public void setESInstance(ExtractSelection es) {
+	/*public void setESInstance(ExtractSelection es) {
     	this.es = es;
-	}
+	}*/
 	
 }

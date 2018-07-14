@@ -45,7 +45,7 @@ public class ShowResults extends ImageProcess{
 		widthRatio = imgRatio(newImgSize.width, imgSize.width);
 		heightRatio = imgRatio(newImgSize.height, imgSize.height);
 		
-		frame.showLabel.setImgRatio(widthRatio, heightRatio);
+		frame.showLabel2.setImgRatio(widthRatio, heightRatio);
 		
 //		System.out.println("Original image: " + imgSize);
 //		System.out.println("Scaled image: " + newImgSize);
@@ -53,7 +53,7 @@ public class ShowResults extends ImageProcess{
 		
 		Image scaledImg = img.getScaledInstance(newImgSize.width, newImgSize.height,
 		        Image.SCALE_DEFAULT);
-		frame.showLabel.getJLabel().setIcon(new ImageIcon(scaledImg));
+		frame.showLabel2.getJLabel().setIcon(new ImageIcon(scaledImg));
 		//frame.showLabel.getJLabel().setIcon(new ImageIcon(img));
 	}
 	

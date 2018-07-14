@@ -16,6 +16,10 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import com.recognition.software.jdeskew.ImageDeskew;
+
+import static org.opencv.imgproc.Imgproc.getStructuringElement;
 /**
  * 
  * @author olis_
@@ -31,9 +35,33 @@ public abstract class ImageProcess {
 	public Mat thresholdBinary(Mat img) {
 		
 		Mat binarized = new Mat();
-		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY);
+		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY /*ADAPTIVE_THRESH_MEAN_C*/);
 		
 		return binarized;
+	}
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the binarized image (fully b&w instead of grayscale)
+	 */
+	public Mat thresholdBinaryInv(Mat img) {
+		
+		Mat binarized = new Mat();
+		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY_INV);
+		
+		return binarized;
+	}
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the binarized image (fully b&w instead of grayscale)
+	 */
+	public Mat canny(Mat img) {
+		
+		Mat canny = new Mat();
+		Imgproc.Canny(img, canny, 100, 150);/*threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY_INV);*/
+		
+		return canny;
 	}
 	
 	/**
@@ -54,21 +82,51 @@ public abstract class ImageProcess {
 	 * @param img is the grayscale input image
 	 * @return returns the blurred image
 	 */
-	public Mat gaussianBlur(Mat img) {
+	public Mat gaussianBlur(Mat img, int size) {
 		
 		Mat gaussianBlur = new Mat();
-		Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
-		//Imgproc.GaussianBlur(img, gaussianBlur, new Size(5,5), 0, 0);
+		
+		switch(size) {
+			case 1:
+				Imgproc.GaussianBlur(img, gaussianBlur, new Size(1,1), 0, 0);
+			case 3:
+				Imgproc.GaussianBlur(img, gaussianBlur, new Size(3,3), 0, 0);
+			case 5:
+				Imgproc.GaussianBlur(img, gaussianBlur, new Size(5,5), 0, 0);
+		}
+		
 		return gaussianBlur;
 	}
-	
+	/**
+	 * 
+	 * @param img input image
+	 * @param blur blurred image
+	 * @return returns a sharpened image 
+	 *  by subtracting the blurred image from the original 
+	 */
 	public Mat sharpen(Mat img, Mat blur) {
 		
 		//dest and img must have same size of rows,cols,&type
 		//Mat dest = new Mat(img.rows(), img.cols(), img.type());
-		Core.addWeighted(img, 0.8, blur, 0.6, 0, img); 
+		Core.addWeighted(img, 0.9, blur, 0.4, 0, img); 
 		
 		return img;
+	}
+	
+	public Mat erode(Mat img) {
+		
+		Mat dest = new Mat();
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(1, 1), new Point(0,0));
+		Imgproc.erode(img, dest, kernel);
+		return dest;
+	}
+	
+	public Mat dilate(Mat img) {
+		
+		Mat dest = new Mat();
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3), new Point(0,0));
+		Imgproc.dilate(img, dest, kernel);
+		return dest;
 	}
 	
 	/**
@@ -91,12 +149,10 @@ public abstract class ImageProcess {
 	 * @return returns the converted image (BGR format)
 	 */
 	public Mat toRGB(Mat img) {
-		
 		Mat rgb = new Mat();
 		
 		//Resetting the image format to RBG from Grayscale before showing the detected rectangles
         Imgproc.cvtColor(img, rgb, Imgproc.COLOR_GRAY2BGR);
-        
 		return rgb;
 	}
 
@@ -145,7 +201,10 @@ public abstract class ImageProcess {
 
 	    ImageIcon image = new ImageIcon(createAwtImage(mat));*/
 	}
-	
+	/**
+	 * @param in image to be converted to Mat
+	 * @return Mat version of the BufferendImage
+	 */
 	public static Mat createMatImg(BufferedImage in){
 		Mat out;
 		byte[] data;
@@ -225,7 +284,12 @@ public abstract class ImageProcess {
 		
 		return imgRatio;
 	}
-	
+	/**
+	 * 
+	 * @param contours contours of the image input containing the candidate cells
+	 * @param src the image source
+	 * @return returns a list of cropped Mat images of the candidate cells in src
+	 */
 	public List<Mat> getNamesMat(List<MatOfPoint> contours, Mat src) {
 		
 		Mat rectangleName;
@@ -250,7 +314,11 @@ public abstract class ImageProcess {
 		
 		//extractText();
 	}
-	
+	/**
+	 * 
+	 * @param dirName directory of the candidate cells
+	 * @return filenames of the candidate cell in the directory
+	 */
 	//traverse each files in the directory and add it to the List
     public static List<File> doListing(File dirName) {
 
@@ -269,6 +337,23 @@ public abstract class ImageProcess {
         return files;
     }
     
+    public double getSkewAngle(Mat src) {
+    	BufferedImage srcBI;
+    	double skewAngle;
+    	
+    	srcBI = createAwtImage(src);
+        ImageDeskew id = new ImageDeskew(srcBI);
+		skewAngle = id.getSkewAngle();
+
+		return skewAngle;
+    }
+    
+    /**
+     * 
+     * @param src image source to be deskewed
+     * @param angle angle of skew of the document
+     * @return returns a fixed/deskewed image
+     */
     public Mat deskew(Mat src, double angle){
 		Point center = new Point(src.width()/2, src.height()/2);
 		Mat rotImage = Imgproc.getRotationMatrix2D(center, angle, 1.0);
@@ -278,8 +363,6 @@ public abstract class ImageProcess {
 		
 		//new ShowResults().saveImage(src, "skewed/imgskewed.png");
 		return src;
-		
-		
 	}
 
 }
