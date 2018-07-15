@@ -144,7 +144,7 @@ public class ShowLabel2 {
 		
 		for(int i=1; i<points.size(); i++) {
 			
-			currSum = (int)points.get(0).x + (int)points.get(0).y;
+			currSum = (int)points.get(i).x + (int)points.get(i).y;
 			if(currSum < sum) {
 				start = points.get(i);
 				System.out.println("Current start point: " + start);

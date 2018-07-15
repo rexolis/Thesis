@@ -28,7 +28,7 @@ public class OCR extends ImageProcess{
 	    
     public void fileTraverse() {
 
-        String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\tempNew";
+        String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\thinned";
         File file = new File(dirName);
         List<File> myfiles = doListing(file);
         

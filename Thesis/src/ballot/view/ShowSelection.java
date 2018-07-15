@@ -23,7 +23,7 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 	private JFrame frame;
 	private JPanel selectionPanel;
 	private JLabel selectionLabel = new JLabel();
-
+ 
 	private JButton btnAddTemplate = new JButton("Add to Template");
 	private JButton btnCancel = new JButton("Cancel");
 	private JLabel lblPosition = new JLabel("Position: ");
@@ -40,7 +40,10 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 		//this.selection = selection;
 		
 		selectionAwt = createAwtImage(selection);
+		//selection = createMatImage(selectionAwt);
 
+		System.out.println(selection);
+		
 		createPanel();
 
 		

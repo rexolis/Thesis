@@ -17,7 +17,7 @@ import ballot.view.ShowSelection;
 public class ExtractSelection extends ImageProcess {
 
 	public Mat userSelection, src;
-	private Mat cell, blur, sharp, /*trunc,*/ binary;
+	private Mat cell, blur, sharp, binary, thinned;
 	private Rect rect;
 	private List<Mat> names;
     private List<MatOfPoint> contours;
@@ -77,16 +77,19 @@ public class ExtractSelection extends ImageProcess {
 		String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\temp";
 		candidateCells = doListing(new File(dirName));
 		
-		for(int i=0, j=1; i<candidateCells.size(); i++) {
+		for(int i=0, j=1, k=1; i<candidateCells.size(); i++) {
         	cell = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
         	blur = gaussianBlur(cell, 1);
         	sharp = sharpen(cell, blur);
         	binary = thresholdBinary(sharp);
+        	//erode = dilate(binary);
+        	thinned = new ZhangSuenThinning(binary).getImage();
         	//blur = gaussianBlur(sharp);
         	//trunc = thresholdTruncate(blur);
         	new ShowResults().saveImage(binary, "tempNew/candidate" + j++ + ".png" );
+        	new ShowResults().saveImage(thinned, "thinned/candidate" + k++ + ".png" );
         	
         }
 		extractText();
 	}
-}
+} 

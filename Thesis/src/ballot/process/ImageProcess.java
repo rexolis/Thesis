@@ -80,6 +80,19 @@ public abstract class ImageProcess {
 	/**
 	 * 
 	 * @param img is the grayscale input image
+	 * @return returns the truncated image
+	 */
+	public static Mat thresholdOtsu(Mat img) {
+		
+		Mat otsu= new Mat();
+		Imgproc.threshold(img, otsu, 0, 255, Imgproc.THRESH_OTSU);
+		
+		return otsu;
+	}
+	
+	/**
+	 * 
+	 * @param img is the grayscale input image
 	 * @return returns the blurred image
 	 */
 	public Mat gaussianBlur(Mat img, int size) {
@@ -116,7 +129,7 @@ public abstract class ImageProcess {
 	public Mat erode(Mat img) {
 		
 		Mat dest = new Mat();
-		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(1, 1), new Point(0,0));
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3), new Point(0,0));
 		Imgproc.erode(img, dest, kernel);
 		return dest;
 	}
@@ -124,7 +137,7 @@ public abstract class ImageProcess {
 	public Mat dilate(Mat img) {
 		
 		Mat dest = new Mat();
-		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3), new Point(0,0));
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(2, 2), new Point(0,0));
 		Imgproc.dilate(img, dest, kernel);
 		return dest;
 	}
@@ -205,15 +218,58 @@ public abstract class ImageProcess {
 	 * @param in image to be converted to Mat
 	 * @return Mat version of the BufferendImage
 	 */
-	public static Mat createMatImg(BufferedImage in){
+	public static Mat createMatImage(BufferedImage in) {
+		Mat mat = new Mat(in.getHeight(), in.getWidth(), CvType.CV_8UC1);
+		byte[] data = ((DataBufferByte) in.getRaster().getDataBuffer()).getData();
+		mat.put(0, 0, data);
+		return mat;
+	}
+	/*public static Mat createMatImage(BufferedImage in){
+          
+		Mat out;
+          byte[] data;
+          int r, g, b;
+          int height = in.getHeight();
+          int width = in.getWidth();
+          if(in.getType() == BufferedImage.TYPE_INT_RGB || in.getType() == BufferedImage.TYPE_INT_ARGB)
+          {
+              out = new Mat(height, width, CvType.CV_8UC3);
+              data = new byte[height * width * (int)out.elemSize()];
+              int[] dataBuff = in.getRGB(0, 0, width, height, null, 0, width);
+              for(int i = 0; i < dataBuff.length; i++)
+              {
+                  data[i*3 + 2] = (byte) ((dataBuff[i] >> 16) & 0xFF);
+                  data[i*3 + 1] = (byte) ((dataBuff[i] >> 8) & 0xFF);
+                  data[i*3] = (byte) ((dataBuff[i] >> 0) & 0xFF);
+              }
+          }
+          else
+          {
+              out = new Mat(height, width, CvType.CV_8UC1);
+              data = new byte[height * width * (int)out.elemSize()];
+              int[] dataBuff = in.getRGB(0, 0, width, height, null, 0, width);
+              for(int i = 0; i < dataBuff.length; i++)
+              {
+                r = (byte) ((dataBuff[i] >> 16) & 0xFF);
+                g = (byte) ((dataBuff[i] >> 8) & 0xFF);
+                b = (byte) ((dataBuff[i] >> 0) & 0xFF);
+                data[i] = (byte)((0.21 * r) + (0.71 * g) + (0.07 * b)); //luminosity
+              }
+           }
+           out.put(0, 0, data);
+           return out;
+	}*/
+	/*public static Mat createMatImage(BufferedImage in){
 		Mat out;
 		byte[] data;
 		int r, g, b;
+        int height = in.getHeight();
+        int width = in.getWidth();
 		if(in.getType() == BufferedImage.TYPE_INT_RGB)
 		{
-		    out = new Mat(240, 320, CvType.CV_8UC3);
-		    data = new byte[320 * 240 * (int)out.elemSize()];
-		    int[] dataBuff = in.getRGB(0, 0, 320, 240, null, 0, 320);
+		    out = new Mat(height, width, CvType.CV_8UC3);
+		    data = new byte[height * width * (int)out.elemSize()];
+		    int[] dataBuff = in.getRGB(0, 0, width, height, null, 0, width);
 		    for(int i = 0; i < dataBuff.length; i++)
 		    {
 		        data[i*3] = (byte) ((dataBuff[i] >> 16) & 0xFF);
@@ -223,9 +279,9 @@ public abstract class ImageProcess {
 		}
 		else
 		{
-		    out = new Mat(240, 320, CvType.CV_8UC1);
-		    data = new byte[320 * 240 * (int)out.elemSize()];
-		    int[] dataBuff = in.getRGB(0, 0, 320, 240, null, 0, 320);
+		    out = new Mat(height, width, CvType.CV_8UC1);
+		    data = new byte[height * width * (int)out.elemSize()];
+		    int[] dataBuff = in.getRGB(0, 0, width, height, null, 0, width);
 		    for(int i = 0; i < dataBuff.length; i++)
 		    {
 		      r = (byte) ((dataBuff[i] >> 16) & 0xFF);
@@ -236,7 +292,7 @@ public abstract class ImageProcess {
 		 }
 		 out.put(0, 0, data);
 		 return out;
-     }
+     }*/
 	
 	/**
 	 * 
