@@ -44,10 +44,10 @@ public abstract class ImageProcess {
 	 * @param img is the grayscale input image
 	 * @return returns the binarized image (fully b&w instead of grayscale)
 	 */
-	public Mat thresholdBinaryInv(Mat img) {
+	public Mat thresholdAdaptiveG(Mat img) {
 		
 		Mat binarized = new Mat();
-		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY_INV);
+		Imgproc.adaptiveThreshold(img, binarized, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 15, 40); 
 		
 		return binarized;
 	}
@@ -119,9 +119,7 @@ public abstract class ImageProcess {
 	 */
 	public Mat sharpen(Mat img, Mat blur) {
 		
-		//dest and img must have same size of rows,cols,&type
-		//Mat dest = new Mat(img.rows(), img.cols(), img.type());
-		Core.addWeighted(img, 0.9, blur, 0.4, 0, img); 
+		Core.addWeighted(img, 1.5, blur, -0.5, 0, img); 
 		
 		return img;
 	}
@@ -129,7 +127,7 @@ public abstract class ImageProcess {
 	public Mat erode(Mat img) {
 		
 		Mat dest = new Mat();
-		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3), new Point(0,0));
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(2, 2), new Point(0,0));
 		Imgproc.erode(img, dest, kernel);
 		return dest;
 	}
@@ -166,6 +164,19 @@ public abstract class ImageProcess {
 		
 		//Resetting the image format to RBG from Grayscale before showing the detected rectangles
         Imgproc.cvtColor(img, rgb, Imgproc.COLOR_GRAY2BGR);
+		return rgb;
+	}
+
+	/**
+	 * 
+	 * @param img is the grayscale (CV_8UC1) image source to be converted to rgb (CV_8UC3)
+	 * @return returns the converted image (BGR format)
+	 */
+	public Mat toGray(Mat img) {
+		Mat rgb = new Mat();
+		
+		//Resetting the image format to RBG from Grayscale before showing the detected rectangles
+        Imgproc.cvtColor(img, rgb, Imgproc.COLOR_BGR2GRAY);
 		return rgb;
 	}
 
@@ -345,13 +356,13 @@ public abstract class ImageProcess {
 	 * @param contours contours of the image input containing the candidate cells
 	 * @param src the image source
 	 * @return returns a list of cropped Mat images of the candidate cells in src
-	 */
+	 *//*
 	public List<Mat> getNamesMat(List<MatOfPoint> contours, Mat src) {
 		
 		Mat rectangleName;
 		List<Mat> names = new ArrayList<Mat>(); 
 		
-		for(int i = 0/*, j = 1*/; i < contours.size(); i++){
+		for(int i = 0; i < contours.size(); i++){
 			if (Imgproc.contourArea(contours.get(i)) > 4000 ){
 
 				Rect rect = Imgproc.boundingRect(contours.get(i));
@@ -370,6 +381,26 @@ public abstract class ImageProcess {
 		
 		//extractText();
 	}
+	*//**
+	 * 
+	 * @param contours contours of the image input containing the candidate cells
+	 * @param src the image source
+	 * @return returns a list of cropped Mat images of the candidate cells in src
+	 *//*
+	public List<Mat> getSortedCandidates(List<Rect> candidates, Mat src) {
+		
+		Mat rectangleName;
+		List<Mat> names = new ArrayList<Mat>(); 
+		
+		for(int i = 0; i < candidates.size(); i++){
+			rectangleName = cropImage(src, candidates.get(i));
+			names.add(rectangleName);
+		}
+		
+		return names;
+		
+		//extractText();
+	}*/
 	/**
 	 * 
 	 * @param dirName directory of the candidate cells
@@ -381,7 +412,7 @@ public abstract class ImageProcess {
     	List<File> files = new ArrayList<>();
     	
         File[] fileList = dirName.listFiles();
-        
+
         for (File file : fileList) {
             if (file.isFile()) {
                 files.add(file);

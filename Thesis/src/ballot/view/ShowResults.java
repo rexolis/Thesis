@@ -35,7 +35,7 @@ public class ShowResults extends ImageProcess{
         
 	}
 	
-	public void showImage(BufferedImage img, MainPanel frame, File filename) {
+	public void showImage(BufferedImage img, MainPanel frame) {
 		
 		imgSize = new Dimension(img.getWidth(), img.getHeight());
 		Dimension boundary = new Dimension(950, 2300);
@@ -47,14 +47,9 @@ public class ShowResults extends ImageProcess{
 		
 		frame.showLabel2.setImgRatio(widthRatio, heightRatio);
 		
-//		System.out.println("Original image: " + imgSize);
-//		System.out.println("Scaled image: " + newImgSize);
-//		System.out.println("Image Ratio: " + widthRatio + ", " + heightRatio);
-		
 		Image scaledImg = img.getScaledInstance(newImgSize.width, newImgSize.height,
 		        Image.SCALE_DEFAULT);
 		frame.showLabel2.getJLabel().setIcon(new ImageIcon(scaledImg));
-		//frame.showLabel.getJLabel().setIcon(new ImageIcon(img));
 	}
 	
 	public void saveImage(Mat src, String filename) {

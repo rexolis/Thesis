@@ -8,6 +8,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import ballot.view.MainPanel;
+import ballot.view.ShowResults;
 
 public class ImageLoad{
 	
@@ -18,10 +19,10 @@ public class ImageLoad{
 	public ImageLoad(String args, MainPanel frame) {
 		
 		String filename = "images/" + args;
-		
+		//String filename = "images/selection.png";
         // Load an image in a grayscale format
         src = Imgcodecs.imread(filename, Imgcodecs.IMREAD_GRAYSCALE);
-        
+        new ShowResults().saveImage(src, "input.png");
         //Load a colored version of image
         srcColored = Imgcodecs.imread(filename, Imgcodecs.IMREAD_COLOR);
         System.out.println("Grayscale: " + src + "\nOriginal: " + srcColored);
@@ -36,7 +37,7 @@ public class ImageLoad{
             System.exit(-1);
         }
         
-        extract = new ExtractVoteArea(this.getImg(), true, this, frame, new File(filename));
+        extract = new ExtractVoteArea(this.getImg(), true, this, frame);
         //extract.showResultsGetInstance();
 	}
 	

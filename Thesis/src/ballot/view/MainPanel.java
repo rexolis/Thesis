@@ -189,6 +189,7 @@ public class MainPanel extends JPanel implements ActionListener{
 			es = new ExtractSelection(il.getCroppedImage());
 			//showLabel2.setERInstance(er);
 			showLabel2.addListeners();
+			//showLabel2.points.clear();
 			showLabel2.setESInstance(es);
 			btnExtractSelection.setEnabled(true);
 

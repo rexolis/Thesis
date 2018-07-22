@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 public class ShowLabel2 {
 
 	private double widthRatio, heightRatio;
-	private List<Point> points = new ArrayList<Point>();
+	public List<Point> points = new ArrayList<Point>();
 	//private int x, y, w, h; //x,y start | w,h dimension
 	
 	public Rect upscaledDim;
@@ -122,13 +122,21 @@ public class ShowLabel2 {
 			System.out.println("four points");
 			getRect();
 		}
+
+		
 	}
 	
 	public void getRect() {
 		int x,y,w,h, sum, currSum=0,
 				sum1, currSum1=0;
 		Point start, end;
-
+		
+		/*points.add(new Point(948,1230));
+		points.add(new Point(8,1079));
+		points.add(new Point(948,1077));
+		points.add(new Point(10,1227));
+		System.out.println(points);*/
+		
 		//assume the start/end point is the first item in the list
 		start = points.get(0);
 		end = points.get(0);
@@ -184,6 +192,7 @@ public class ShowLabel2 {
 		}
 		public void mouseReleased(MouseEvent e) {
 			setPoints(new Point(e.getX(), (int)e.getY()));
+			//getRect();
 		}
 		public void mouseDragged(MouseEvent e) {
 			
