@@ -81,7 +81,7 @@ public class ExtractSelection extends ImageProcess {
 	        if (Imgproc.contourArea(contours.get(i)) > 4000 ){
 	            Rect rect1 = Imgproc.boundingRect(contours.get(i));
 	            if (rect1.height > 28){
-		            System.out.println(i+". "+rect1);
+		            //System.out.println(i+". "+rect1);
 		            candidates.add(rect1);
 		            
 		            for(int j = i+1; j < contours.size(); j++) {
@@ -90,7 +90,7 @@ public class ExtractSelection extends ImageProcess {
 		            		if (rect2.height > 28){
 		            			try {
 		            				if(Math.abs(rect1.y - rect2.y) < 9) {
-		            		            System.out.println(j+". "+rect2);
+		            		            //System.out.println(j+". "+rect2);
 		            					candidates.add(rect2);
 		            				}
 		
@@ -102,17 +102,17 @@ public class ExtractSelection extends ImageProcess {
 		            	}
 		            }
 		            i += candidates.size()-1; //starting off where j ended 
-					System.out.println("new start: " + (i+1));
+					//System.out.println("new start: " + (i+1));
 	            }
-	            System.out.println("to be sorted: " + candidates);
+	            //System.out.println("to be sorted: " + candidates);
 	            this.candidates = candidates;
 	            //sort here
 	            sortRect(0, candidates.size()-1);
-	            System.out.println("sorted: " + this.candidates);
+	            //System.out.println("sorted: " + this.candidates);
 	            drawRect();
 	            
 	            candidates.clear();
-	            System.out.println("resetting the list: " + candidates);
+	            //System.out.println("resetting the list: " + candidates);
 	        }
         }
 	}
