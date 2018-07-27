@@ -2,6 +2,7 @@ package ballot.view;
 
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -111,7 +112,7 @@ public class MainPanel extends JPanel implements ActionListener{
 		sidePanel.add(btnGetVoteArea, "wrap");
 		sidePanel.add(btnSetSelection, "wrap");
 		sidePanel.add(btnExtractSelection, "wrap");
-		sidePanel.add(btnPrintNames, "wrap");
+		//sidePanel.add(btnPrintNames, "wrap");
 		//sidePanel.add(imgprocPanel);
 		
 		btnGetVoteArea.setEnabled(false);
@@ -172,6 +173,9 @@ public class MainPanel extends JPanel implements ActionListener{
         		this.validate();
         		this.repaint();
             }
+			btnSetSelection.setEnabled(false);
+			btnExtractSelection.setEnabled(false);
+			btnPrintNames.setEnabled(false);
 		}
 		
 		//this can only be accessed if there is a ballot loaded in the program 
@@ -189,22 +193,31 @@ public class MainPanel extends JPanel implements ActionListener{
 			es = new ExtractSelection(il.getCroppedImage());
 			//showLabel2.setERInstance(er);
 			showLabel2.addListeners();
-			//showLabel2.points.clear();
-			showLabel2.setESInstance(es);
-			btnExtractSelection.setEnabled(true);
+			showLabel2.points.clear();
+			System.out.println("Points reset:" + showLabel2.points );
+			showLabel2.setESInstance(es, this);
+			//btnExtractSelection.setEnabled(true);
 
 		}
 		else if (e.getSource() == btnExtractSelection) {
 			
 			//er.setESInstance(es);
 			es.extractSelection();
-
-			es.showSelection(this);
+			
+			try {
+				es.removeDirContents();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				//e1.printStackTrace();
+				System.out.println("hehe");
+			}
+			
+			es.showSelection();
 			btnPrintNames.setEnabled(true);
 
 		}
 
-		else if (e.getSource() == btnPrintNames) {
+		/*else if (e.getSource() == btnPrintNames) {
 			boolean binaryCheck, truncCheck, gaussianCheck, sharpenCheck;
 			binaryCheck = truncCheck = gaussianCheck = sharpenCheck = false;
 			
@@ -221,7 +234,7 @@ public class MainPanel extends JPanel implements ActionListener{
 				sharpenCheck = true;
 			}
 			
-			es.preprocessCells(binaryCheck, truncCheck, gaussianCheck, sharpenCheck);
+			es.preprocessCells();
 			//es.extractText();
 			
 			
@@ -229,7 +242,7 @@ public class MainPanel extends JPanel implements ActionListener{
 //			es.extractSelection();
 //			btnPrintNames.setEnabled(true);
 
-		}
+		}*/
 		
 		else {
 			System.out.println("clicked something else");

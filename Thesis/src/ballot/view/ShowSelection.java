@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import org.opencv.core.Mat;
 
+import ballot.process.ExtractSelection;
 import ballot.process.ImageProcess;
 import net.miginfocom.swing.MigLayout;
 
@@ -32,17 +33,18 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 	private JTextField choice = new JTextField(30);
 	
 	private BufferedImage selectionAwt;
+	private ExtractSelection es;
 	
-	public ShowSelection(Mat selection, MainPanel mp) {
+	public ShowSelection(Mat selection, ExtractSelection es) {
 		
 		frame = new JFrame("User Selection");
 		selectionPanel = new JPanel();
+		this.es = es;
 		//this.selection = selection;
 		
-		selectionAwt = createAwtImage(selection);
+		selectionAwt = createAwtImage(toGray(selection));
 		//selection = createMatImage(selectionAwt);
 
-		System.out.println(selection);
 		
 		createPanel();
 
@@ -88,6 +90,7 @@ public class ShowSelection extends ImageProcess implements ActionListener{
 		if (e.getSource() == this.btnAddTemplate) {
 			System.out.println("clicked add");
 			//System.exit(1);
+			es.preprocessCells();
 			frame.dispose();
 			
 		}

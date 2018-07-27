@@ -1,6 +1,7 @@
 package ballot.process;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import ballot.view.MainPanel;
+import org.apache.commons.io.FileUtils;
+
 import ballot.view.ShowResults;
 import ballot.view.ShowSelection;
 
@@ -40,7 +42,7 @@ public class ExtractSelection extends ImageProcess {
 		userSelection = cropImage(src, rect);
 		skewSelection = deskewSelection();
 		//Core.copyMakeBorder(userSelection, userSelection, 3, 3, 3, 3, Core.BORDER_CONSTANT, new Scalar(0,0,0));
-		//System.out.println(userSelection);
+		//System.out.println("user selection "+userSelection);
 		getNames();
 	}
 	
@@ -60,6 +62,13 @@ public class ExtractSelection extends ImageProcess {
 	
 	public void getNames() {
 
+		try {
+			FileUtils.cleanDirectory(new File("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\temp"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		contours = findContours(thresholdBinary(skewSelection));
 		//names = getNamesMat(contours, skewSelection);
 		skewSelection = toRGB(skewSelection);
@@ -101,14 +110,14 @@ public class ExtractSelection extends ImageProcess {
 		            		
 		            	}
 		            }
-		            i += candidates.size()-1; //starting off where j ended 
+		            i += candidates.size(); //starting off where j ended 
 					//System.out.println("new start: " + (i+1));
 	            }
-	            //System.out.println("to be sorted: " + candidates);
+	            System.out.println("to be sorted: " + candidates);
 	            this.candidates = candidates;
 	            //sort here
 	            sortRect(0, candidates.size()-1);
-	            //System.out.println("sorted: " + this.candidates);
+	            System.out.println("sorted: " + this.candidates);
 	            drawRect();
 	            
 	            candidates.clear();
@@ -180,9 +189,9 @@ public class ExtractSelection extends ImageProcess {
 		
 	}
 	
-	public void showSelection(MainPanel mp) {
+	public void showSelection() {
 		
-		new ShowSelection(getUserSelection(), mp);
+		new ShowSelection(getUserSelection(), this);
 	}
 	
 	public void extractText() {
@@ -190,11 +199,27 @@ public class ExtractSelection extends ImageProcess {
 		new OCR().fileTraverse();
 	}
 	
-	public void preprocessCells(boolean binaryCheck, boolean truncCheck, boolean gaussianCheck, boolean sharpenCheck) {
+	public void removeDirContents() throws IOException {
+		String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images";
+		String folderTempNew = "\\tempNew";
+		String folderSharp = "\\sharp";
+		String folderThinned = "\\thinned";
+		String folderDilated = "\\dilated";
+		String folderBlur = "\\blur";
+
+		
+		FileUtils.cleanDirectory(new File(dirName+folderTempNew));
+		FileUtils.cleanDirectory(new File(dirName+folderSharp));
+		FileUtils.cleanDirectory(new File(dirName+folderThinned));
+		FileUtils.cleanDirectory(new File(dirName+folderDilated));
+		FileUtils.cleanDirectory(new File(dirName+folderBlur));
+	}
+	
+	public void preprocessCells() {
 		String dirName = "C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\temp";
 		candidateCells = doListing(new File(dirName));
 		
-		for(int i=0, j=1; i<candidateCells.size(); i++, j++) {
+		for(int i=0, j=10; i<candidateCells.size(); i++, j++) {
         	cell = Imgcodecs.imread(candidateCells.get(i).getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE);
         	blur = gaussianBlur(cell, 1);
         	sharp = sharpen(cell, blur);
@@ -203,16 +228,16 @@ public class ExtractSelection extends ImageProcess {
         	//blur = gaussianBlur(binary, 1);
         	
         	binary = cropImage(binary, new Rect(3, 3, 
-        										binary.width()-6,
-        										binary.height()-6));
+        										binary.width()-5,
+        										binary.height()-5));
         	
         	thinned = new ZhangSuenThinning(binary).getImage();
         	
         	//the image is not inverted binary so erosion 
         	//works like dilation
         	eroded = erode(thinned);
-        	//blur = gaussianBlur(sharp);
-        	//trunc = thresholdTruncate(blur);
+
+        	new ShowResults().saveImage(blur, "blur/candidate" + j + ".png" );
         	new ShowResults().saveImage(sharp, "sharp/candidate" + j + ".png" );
         	new ShowResults().saveImage(binary, "tempNew/candidate" + j + ".png" );
         	new ShowResults().saveImage(thinned, "thinned/candidate" + j + ".png" );

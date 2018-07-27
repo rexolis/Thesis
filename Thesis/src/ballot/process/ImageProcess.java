@@ -32,6 +32,18 @@ public abstract class ImageProcess {
 	 * @param img is the grayscale input image
 	 * @return returns the binarized image (fully b&w instead of grayscale)
 	 */
+	public static Mat thresholdBinaryInv(Mat img) {
+		
+		Mat binarized = new Mat();
+		Imgproc.threshold(img, binarized, 200, 255, Imgproc.THRESH_BINARY_INV /*ADAPTIVE_THRESH_MEAN_C*/);
+		
+		return binarized;
+	}
+	/**
+	 * 
+	 * @param img is the grayscale input image
+	 * @return returns the binarized image (fully b&w instead of grayscale)
+	 */
 	public Mat thresholdBinary(Mat img) {
 		
 		Mat binarized = new Mat();
@@ -119,7 +131,7 @@ public abstract class ImageProcess {
 	 */
 	public Mat sharpen(Mat img, Mat blur) {
 		
-		Core.addWeighted(img, 1.5, blur, -0.5, 0, img); 
+		Core.addWeighted(img, 1.7, blur, -0.6, 0, img); 
 		
 		return img;
 	}
@@ -135,7 +147,7 @@ public abstract class ImageProcess {
 	public Mat dilate(Mat img) {
 		
 		Mat dest = new Mat();
-		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(2, 2), new Point(0,0));
+		Mat kernel = getStructuringElement(Imgproc.MORPH_RECT, new Size(1, 1), new Point(0,0));
 		Imgproc.dilate(img, dest, kernel);
 		return dest;
 	}
@@ -169,8 +181,8 @@ public abstract class ImageProcess {
 
 	/**
 	 * 
-	 * @param img is the grayscale (CV_8UC1) image source to be converted to rgb (CV_8UC3)
-	 * @return returns the converted image (BGR format)
+	 * @param img is the colored (CV_8UC3) image source to be converted to grayscale (CV_8UC1)
+	 * @return returns the converted grayscale image
 	 */
 	public Mat toGray(Mat img) {
 		Mat rgb = new Mat();

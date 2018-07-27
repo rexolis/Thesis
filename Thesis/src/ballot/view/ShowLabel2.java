@@ -28,12 +28,16 @@ public class ShowLabel2 {
 	public JPanel thisPanel = new JPanel();
 	
 
-	public ExtractRectangles er;
+	//public ExtractRectangles er;
 	public ExtractSelection es;
+	public MyMouseListener listenerLabel;
+	public MainPanel mp;
 	
 	
 	
 	public ShowLabel2() {
+		
+		//listenerLabel = new MyMouseListener();
 		
 		thisPanel.setLayout(new MigLayout());
 		lbl1 = new JLabel();
@@ -76,10 +80,12 @@ public class ShowLabel2 {
 	}
 	
 	public void addListeners() {
-
-		MyMouseListener listenerLabel = new MyMouseListener();
-      	lbl1.addMouseListener(listenerLabel);
-      	lbl1.addMouseMotionListener(listenerLabel);
+		
+		if(listenerLabel == null) {
+			listenerLabel = new MyMouseListener();
+	      	lbl1.addMouseListener(listenerLabel);
+	      	lbl1.addMouseMotionListener(listenerLabel);
+		}
 	}
 	
 	public JLabel getJLabel() {
@@ -101,25 +107,27 @@ public class ShowLabel2 {
     	es.setRect(upscaledDim);
     }
 
-    public void setESInstance(ExtractSelection es) {
+    public void setESInstance(ExtractSelection es, MainPanel mp) {
     	this.es = es;
+    	this.mp = mp;
 	}
 	
-	public void setERInstance(ExtractRectangles er) {
+	/*public void setERInstance(ExtractRectangles er) {
     	
     	this.er = er;
     	 //create mouse listener
         //x = y = x2 = y2 = prevY2 = 0; //initialize var for drawing
         //xS = yS = xD = yD = 0; //initialize var for drawing
       	
-    }
+    }*/
 	
 	public void setPoints(Point point) {
-		System.out.println("Point: " + point);
+		//System.out.println("Point: " + point + " " + points.size());
 		points.add(point);
 		
 		if(points.size() == 4) {
-			System.out.println("four points");
+			//System.out.println("four points");
+			mp.btnExtractSelection.setEnabled(true);
 			getRect();
 		}
 
@@ -155,14 +163,14 @@ public class ShowLabel2 {
 			currSum = (int)points.get(i).x + (int)points.get(i).y;
 			if(currSum < sum) {
 				start = points.get(i);
-				System.out.println("Current start point: " + start);
+				//System.out.println("Current start point: " + start);
 				sum = currSum;
 			}
 			
 			currSum1 = (int)points.get(i).x + (int)points.get(i).y;
 			if(currSum1 > sum1) {
 				end = points.get(i);
-				System.out.println("Current end point: " + end);
+				//System.out.println("Current end point: " + end);
 				sum1 = currSum1;
 			}
 	
@@ -180,7 +188,7 @@ public class ShowLabel2 {
 	        		(int)(h/heightRatio)
 					);
 		
-		System.out.println("upsacled rect: " + upscaledDim);
+		//System.out.println("upsacled rect: " + upscaledDim);
 		
 		setScaledSelection();
 		

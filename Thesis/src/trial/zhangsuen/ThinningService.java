@@ -23,9 +23,9 @@ import ballot.process.ImageProcess;
 		public static void main(String[] args) throws IOException {
 		    
 			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-	        Mat result; 
-	        
-	        BufferedImage image = ImageIO.read(new File("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\tempNew\\candidate1.png"));
+	        Mat result,src; 
+	        src = Imgcodecs.imread("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\trial2.png", Imgcodecs.IMREAD_GRAYSCALE);
+	        BufferedImage image = createAwtImage(src);
 	        
 	        int[][] imageData = new int[image.getHeight()][image.getWidth()];
 	        //Color c;
@@ -64,9 +64,9 @@ import ballot.process.ImageProcess;
 	        System.out.println(image);
 	        result = createMatImage(image);
 	        //result = thresholdOtsu(result);
-	        Imgcodecs.imwrite("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\otsu.png", result);
+	        Imgcodecs.imwrite("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\otsuZhang.png", result);
 	 
-	        ImageIO.write(image, "jpg", new File("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\skeleton.png"));
+	        ImageIO.write(image, "jpg", new File("C:\\Users\\olis_\\git\\ThesisGit\\Thesis\\images\\skeletonZhang.png"));
 	 
 	    }
 		
@@ -97,8 +97,10 @@ import ballot.process.ImageProcess;
 	                        pointsToChange.add(new Point(x, y));
 	//binaryImage[y][x] = 0;
 	                        hasChange = true;
+	    	                System.out.println("X1: " + (x+1));
 	                    }
 	                }
+	                System.out.println("Y1: " + (y+1));
 	            }
 	            for (Point point : pointsToChange) {
 	                binaryImage[point.getY()][point.getX()] = 0;
@@ -127,7 +129,7 @@ import ballot.process.ImageProcess;
 	    private int getA(int[][] binaryImage, int y, int x) {
 	        int count = 0;
 	//p2 p3
-	        if (y - 1 >= 0 && x + 1 < binaryImage[y].length && binaryImage[y - 1][x] == 0 && binaryImage[y - 1][x + 1] == 1) {
+	        if (y - 1 >= 0 && x + 1 < binaryImage[y].length && /*p2*/binaryImage[y - 1][x] == 0 && /*p3*/binaryImage[y - 1][x + 1] == 1) {
 	            count++;
 	        }
 	//p3 p4
